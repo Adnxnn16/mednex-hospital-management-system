@@ -1,0 +1,77 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: mednex-backend
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:mednex}
+    username: ${DB_USERNAME:mednex}
+    password: ${DB_PASSWORD:mednex}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        multiTenancy: SCHEMA
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
+        redisson:
+          config: ""
+          fallback: true
+        default_batch_fetch_size: 20
+        generate_statistics: false
+  flyway:
+    enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:user}
+    password: ${SMTP_PASSWORD:pass}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${MEDNEX_SECURITY_ISSUER:http://localhost:8080/realms/mednex}
+          jwk-set-uri: ${MEDNEX_SECURITY_JWK_SET_URI:http://localhost:8080/realms/mednex/protocol/openid-connect/certs}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+mednex:
+  security:
+    issuer: ${MEDNEX_SECURITY_ISSUER:http://localhost:8080/realms/mednex}
+    jwk-set-uri: ${MEDNEX_SECURITY_JWK_SET_URI:http://localhost:8080/realms/mednex/protocol/openid-connect/certs}
+  tenants:
+    allowed: hospital_a,hospital_b
+    default-tenant: hospital_a
+
+app:
+  pdf:
+    encryption-key: ${APP_PDF_ENCRYPTION_KEY:change_me}

@@ -1,0 +1,97 @@
+<div class="shell-container" [class.collapsed]="isSidebarCollapsed">
+  <!-- Sidebar -->
+  <aside class="main-sidebar">
+    <div class="sidebar-header">
+      <div class="logo-box">
+        <span class="material-symbols-outlined">medical_services</span>
+      </div>
+      <div class="logo-text" *ngIf="!isSidebarCollapsed">
+        <h1>MedNex</h1>
+        <p>Enterprise HMS</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="section-label" *ngIf="!isSidebarCollapsed">Main Operations</div>
+        <a *ngFor="let item of nav" 
+           [routerLink]="item.route" 
+           routerLinkActive="active" 
+           class="nav-item"
+           [matTooltip]="isSidebarCollapsed ? item.label : ''"
+           matTooltipPosition="right">
+          <span class="material-symbols-outlined">{{ item.icon }}</span>
+          <span class="label-text" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="section-label" *ngIf="!isSidebarCollapsed">Preferences</div>
+        <a [routerLink]="auth.roleSettingsRoute()" 
+           routerLinkActive="active" 
+           class="nav-item"
+           [matTooltip]="isSidebarCollapsed ? 'Settings' : ''"
+           matTooltipPosition="right">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="label-text" *ngIf="!isSidebarCollapsed">Settings</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer" (click)="toggleSidebar()">
+      <span class="material-symbols-outlined">
+        {{ isSidebarCollapsed ? 'last_page' : 'first_page' }}
+      </span>
+      <span class="label-text" *ngIf="!isSidebarCollapsed">Collapse Sidebar</span>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-layout">
+    <header class="top-header">
+      <div class="header-left">
+        <div class="breadcrumb">
+          <span class="parent">Enterprise</span>
+          <span class="material-symbols-outlined">chevron_right</span>
+          <span class="current">Hospital Dashboard</span>
+        </div>
+        <div class="v-divider"></div>
+        <div class="sync-status">
+          <span class="pulse-dot"></span>
+          NETWORK LIVE
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="search-box">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" placeholder="Search data...">
+        </div>
+        
+        <button class="icon-btn" aria-label="View notifications">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="badge"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="user-info">
+            <span class="user-name">{{ auth.username() }}</span>
+            <span class="user-role">{{ auth.roleLabel() }}</span>
+          </div>
+          <img
+            [src]="'https://ui-avatars.com/api/?name=' + auth.username() + '&background=22A3FF&color=fff&bold=true'"
+            alt="User Avatar"
+            class="user-avatar"
+          >
+          <button class="icon-btn logout-btn" (click)="auth.logout()" matTooltip="Sign out" matTooltipPosition="below" aria-label="Sign out">
+            <span class="material-symbols-outlined">logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

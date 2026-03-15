@@ -1,0 +1,63 @@
+<div class="p-8 max-w-[1400px] mx-auto w-full" @fadeIn>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+            <h2 class="text-3xl font-bold tracking-tight text-white">Clinical Calendar</h2>
+            <p class="text-slate-400 mt-2">Integrated schedule for staff and patient coordination.</p>
+        </div>
+        <div class="flex items-center gap-3">
+             <button (click)="toggleForm()" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">{{ showForm ? 'close' : 'event' }}</span>
+                <span>{{ showForm ? 'Cancel Booking' : 'Schedule Appointment' }}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Booking form -->
+    <div *ngIf="showForm && !loading" @slideInOut class="glass-card rounded-3xl p-8 border border-primary/20 bg-primary/5 mb-10">
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Patient</label>
+                    <select formControlName="patientId" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none appearance-none">
+                        <option value="" disabled selected>Select from registry...</option>
+                        <option *ngFor="let p of patients" [value]="p.id">
+                            {{ p.firstName }} {{ p.lastName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Clinical Practitioner</label>
+                    <select formControlName="doctorId" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none appearance-none">
+                        <option value="" disabled selected>Assign doctor...</option>
+                        <option *ngFor="let d of doctors" [value]="d.id">
+                            {{ d.fullName }} — {{ d.specialty || 'General' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Commencement</label>
+                    <input type="datetime-local" formControlName="startTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Conclusion</label>
+                    <input type="datetime-local" formControlName="endTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+            </div>
+            <div class="flex justify-end pt-4">
+                <button type="submit" [disabled]="submitting || form.invalid" class="bg-white text-slate-900 font-bold py-3 px-8 rounded-xl hover:bg-slate-100 transition shadow-xl disabled:opacity-50">
+                    {{ submitting ? 'Finalizing Syncing...' : 'Confirm Reservation' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="glass-card rounded-3xl p-8 border border-white/5 overflow-hidden">
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-6 block">Unified System Schedule</label>
+        <div class="tailwind-calendar">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+    </div>
+</div>
+
+<div class="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none opacity-40"></div>

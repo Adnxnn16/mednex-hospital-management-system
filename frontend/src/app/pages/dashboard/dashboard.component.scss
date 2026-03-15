@@ -1,0 +1,20 @@
+/* Clean up dashboard SCSS. Most styling handled via tailwind utility classes now. */
+
+/* Specifically target FullCalendar to remove bright white backgrounds from its injection */
+::ng-deep {
+    .tailwind-calendar {
+        .fc-theme-standard td, .fc-theme-standard th, .fc-scrollgrid { border-color: rgba(255, 255, 255, 0.1) !important; color: #94a3b8; }
+        .fc-col-header-cell { background: rgba(0, 0, 0, 0.2); border-bottom: none; }
+        .fc-toolbar-title { color: white; font-size: 1.25rem; font-weight: bold; }
+        .fc-button-primary { 
+            background: #1e293b; border: 1px solid #334155; color: #f8fafc;
+            &:active, &:focus, &:hover { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        }
+        .fc-daygrid-day-number, .fc-timegrid-slot-label { color: #cbd5e1; }
+        .fc-timegrid-col-events { margin: 0 4px; }
+        .fc-event { padding: 4px; border-radius: 6px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-weight: 500;}
+        .fc-day-today { background: rgba(59, 130, 246, 0.05) !important; }
+        /* Remove explicit background of entire calendar grid */
+        .fc { background: transparent; }
+    }
+}

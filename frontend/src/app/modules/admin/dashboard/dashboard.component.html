@@ -1,0 +1,211 @@
+<div class="dashboard-container animate-up">
+  <div class="welcome-header">
+    <div class="title-group">
+      <h1>Morning, Clinical Ops</h1>
+      <p>Here is the real-time status of MedNex South Campus.</p>
+    </div>
+    <div class="action-group">
+      <button mat-stroked-button class="date-btn">
+        <span class="material-symbols-outlined">calendar_today</span>
+        Last 24 Hours
+      </button>
+      <button mat-flat-button color="primary" class="export-btn" (click)="exportData()">
+        <span class="material-symbols-outlined">upload</span>
+        Export Data
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <div class="stat-icon patient-icon">
+        <span class="material-symbols-outlined">person</span>
+      </div>
+      <div class="stat-trend positive">+{{stats?.patientTrend}}%</div>
+      <div class="stat-content">
+        <span class="label">Total Patients</span>
+        <h2 class="value">{{stats?.totalPatients?.toLocaleString()}}</h2>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon bed-icon">
+        <span class="material-symbols-outlined">bed</span>
+      </div>
+      <div class="stat-trend">Stable</div>
+      <div class="stat-content">
+        <span class="label">Beds Available</span>
+        <h2 class="value">{{stats?.bedsAvailable}}</h2>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon appointment-icon">
+        <span class="material-symbols-outlined">calendar_month</span>
+      </div>
+      <div class="stat-trend positive">+{{stats?.appointmentTrend}}%</div>
+      <div class="stat-content">
+        <span class="label">Appointments Today</span>
+        <h2 class="value">{{stats?.appointmentsToday}}</h2>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon schedule-icon">
+        <span class="material-symbols-outlined">schedule</span>
+      </div>
+      <div class="stat-trend negative">{{stats?.scheduleTrend}}%</div>
+      <div class="stat-content">
+        <span class="label">Active Schedule</span>
+        <h2 class="value">{{stats?.activeSchedule}}</h2>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Main Analytics Row -->
+  <div class="analytics-row">
+    <!-- Bed Occupancy -->
+    <mat-card class="occupancy-card">
+      <div class="card-header">
+        <h3>Bed Occupancy Analytics</h3>
+        <p>Live distribution by department</p>
+        <button mat-icon-button class="more-btn">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrapper">
+          <canvas baseChart 
+            [data]="doughnutChartData" 
+            [options]="doughnutChartOptions" 
+            [type]="doughnutChartType">
+          </canvas>
+          <div class="chart-center">
+            <span class="percentage">82%</span>
+            <span class="label">GLOBAL LOAD</span>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item" *ngFor="let item of doughnutChartLabels; let i = index">
+            <span class="dot" [style.background-color]="getChartColor(i)"></span>
+            <span class="name">{{item}}</span>
+            <span class="value">{{doughnutChartData.datasets[0].data[i]}}%</span>
+          </div>
+          <div class="total-stats">
+            <div class="total-item">
+              <span class="label">Total Beds:</span>
+              <span class="value">500</span>
+            </div>
+            <div class="total-item">
+              <span class="label">Occupied:</span>
+              <span class="value">412</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Quick Insights -->
+    <div class="insights-col">
+      <mat-card class="insights-card">
+        <h3>Quick Insights <span class="badge">AI Predicted</span></h3>
+        <div class="insight-list">
+          <div class="insight-item">
+            <div class="insight-header">
+              <span>ER Wait Time</span>
+              <span class="highlight warn">{{quickInsights?.erWaitTime}}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill warn" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-header">
+              <span>Lab Processing</span>
+              <span class="highlight success">{{quickInsights?.labProcessing}}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill success" style="width: 40%"></div>
+            </div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-header">
+              <span>Staff Efficiency</span>
+              <span class="highlight primary">{{quickInsights?.staffEfficiency}}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill primary" style="width: 84%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="forecast-box">
+          <div class="forecast-header">
+            <span class="material-symbols-outlined info-icon">info</span>
+            <h4>Smart Forecast</h4>
+          </div>
+          <p>Incoming patient volume expected to rise by 20% in the next 4 hours due to regional transit delays.</p>
+        </div>
+
+        <button mat-stroked-button class="report-btn">VIEW FULL REPORT</button>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Active Admissions Table -->
+  <mat-card class="table-card">
+    <div class="table-header">
+      <h3>Active Admissions</h3>
+      <button mat-button color="primary" class="view-all-btn">View All</button>
+    </div>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="activeAdmissions">
+        <ng-container matColumnDef="patient">
+          <th mat-header-cell *matHeaderCellDef [style.width.%]="40"> PATIENT/ID </th>
+          <td mat-cell *matCellDef="let element" [style.width.%]="40">
+            <div class="patient-cell">
+              <div class="patient-avatar">{{element.id}}</div>
+              <div class="patient-info">
+                <div class="name">{{element.patient}}</div>
+                <div class="px-id">{{element.patientId}}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="department">
+          <th mat-header-cell *matHeaderCellDef [style.width.%]="20"> DEPARTMENT </th>
+          <td mat-cell *matCellDef="let element" [style.width.%]="20"> {{element.department}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef [style.width.%]="15"> STATUS </th>
+          <td mat-cell *matCellDef="let element" [style.width.%]="15">
+            <div class="status-chip-new" [class]="element.status.toLowerCase()">
+              <span class="dot"></span>
+              {{element.status}}
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="admitted">
+          <th mat-header-cell *matHeaderCellDef [style.width.%]="20"> ADMITTED </th>
+          <td mat-cell *matCellDef="let element" [style.width.%]="20"> {{element.admitted}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef [style.width.%]="5"> ACTION </th>
+          <td mat-cell *matCellDef="let element" [style.width.%]="5">
+            <button mat-icon-button class="action-btn">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

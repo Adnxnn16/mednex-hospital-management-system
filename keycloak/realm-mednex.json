@@ -1,0 +1,104 @@
+{
+  "realm": "mednex",
+  "enabled": true,
+  "displayName": "MedNex Enterprise",
+  "loginTheme": "mednex",
+  "registrationAllowed": true,
+  "resetPasswordAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "ROLE_ADMIN" },
+      { "name": "ROLE_DOCTOR" },
+      { "name": "ROLE_NURSE" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "mednex-frontend",
+      "name": "MedNex Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:4200/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "tenant",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant",
+            "claim.name": "tenant",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "mednex-backend",
+      "name": "MedNex Backend",
+      "enabled": true,
+      "bearerOnly": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "admin1",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "One",
+      "email": "admin1@mednex.local",
+      "attributes": { "tenant": "hospital_a" },
+      "credentials": [
+        { "type": "password", "value": "admin123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_ADMIN"]
+    },
+    {
+      "username": "doctor1",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Doctor",
+      "lastName": "One",
+      "email": "doctor1@mednex.local",
+      "attributes": { "tenant": "hospital_a" },
+      "credentials": [
+        { "type": "password", "value": "doctor123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_DOCTOR"]
+    },
+    {
+      "username": "nurse1",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Nurse",
+      "lastName": "One",
+      "email": "nurse1@mednex.local",
+      "attributes": { "tenant": "hospital_a" },
+      "credentials": [
+        { "type": "password", "value": "nurse123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_NURSE"]
+    }
+  ]
+}

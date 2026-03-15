@@ -1,0 +1,268 @@
+<div class="p-8 max-w-[1200px] mx-auto w-full min-h-screen" @fadeIn>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+            <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Patient Admission Terminal</h2>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">Enterprise-grade clinical intake with real-time ward allocation sync.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Secure Triage Channel
+            </div>
+            <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                <span>{{ submitting ? 'Admitting...' : 'Finalize Admission' }}</span>
+            </button>
+        </div>
+    </div>
+
+    <form [formGroup]="demographicsForm" class="space-y-10 pb-20">
+        <!-- Section 1: Core Identity -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">fingerprint</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">01. Core Patient Identity</h3>
+                    <p class="text-sm text-slate-500">Legal documentation and primary identifiers.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">First Name *</label>
+                    <input type="text" formControlName="firstName" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Last Name *</label>
+                    <input type="text" formControlName="lastName" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">DOB *</label>
+                    <input type="date" formControlName="dob" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gender *</label>
+                    <select formControlName="gender" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">SSN / National ID</label>
+                    <input type="text" formControlName="ssn" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="XXX-XX-XXXX">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Marital Status</label>
+                    <select formControlName="maritalStatus" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="SINGLE">Single</option>
+                        <option value="MARRIED">Married</option>
+                        <option value="DIVORCED">Divorced</option>
+                        <option value="WIDOWED">Widowed</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nationality</label>
+                    <input type="text" formControlName="nationality" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Occupation</label>
+                    <input type="text" formControlName="occupation" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Clinical Metrics & Intake Vitals -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
+                    <span class="material-symbols-outlined">vital_signs</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">02. Initial Clinical Triage</h3>
+                    <p class="text-sm text-slate-500">Intake vitals and high-level medical markers.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Blood Type</label>
+                    <input type="text" formControlName="bloodType" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="O+">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weight (kg)</label>
+                    <input type="number" formControlName="weight" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Height (cm)</label>
+                    <input type="number" formControlName="height" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Intake BP</label>
+                    <input type="text" formControlName="intakeBP" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="120/80">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">SpO2 (%)</label>
+                    <input type="number" formControlName="intakeSpO2" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="98">
+                </div>
+                <div class="space-y-2 lg:col-span-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Primary Reason for Admission *</label>
+                    <input type="text" formControlName="reasonForAdmission" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="E.g. Acute abdominal pain">
+                </div>
+                <div class="space-y-2 lg:col-span-3">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Known Allergen Panel</label>
+                    <input type="text" formControlName="knownAllergies" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-red-400 font-bold focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" placeholder="Penicillin, Nut allergy...">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Contact & Emergency -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-500">
+                    <span class="material-symbols-outlined">contact_phone</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">03. Contact & Logistics</h3>
+                    <p class="text-sm text-slate-500">Reachable addresses and emergency points of contact.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Phone Number *</label>
+                    <input type="text" formControlName="phone" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Primary Email *</label>
+                    <input type="email" formControlName="email" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emergency Contact Name *</label>
+                    <input type="text" formControlName="emerName" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2 lg:col-span-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Residential Address</label>
+                    <input type="text" formControlName="address" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emergency Phone *</label>
+                    <input type="text" formControlName="emerPhone" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: History & Preferences (The "Deep" Fields) -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500">
+                    <span class="material-symbols-outlined">history_edu</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">04. Detailed Clinical History</h3>
+                    <p class="text-sm text-slate-500">Comprehensive patient background tracking.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Current Medications</label>
+                        <textarea formControlName="currentMedications" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="List all active prescriptions..."></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Past Surgeries / Procedures</label>
+                        <textarea formControlName="pastSurgeries" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="History of operations..."></textarea>
+                    </div>
+                    <div class="flex items-center gap-6 pt-4">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" formControlName="organDonor" class="rounded border-slate-800 bg-slate-900 text-primary focus:ring-primary">
+                            <span class="text-sm text-slate-300">Organ Donor</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" formControlName="advancedDirective" class="rounded border-slate-800 bg-slate-900 text-primary focus:ring-primary">
+                            <span class="text-sm text-slate-300">Advanced Directive on File</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tobacco Use</label>
+                            <select formControlName="tobaccoUse" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white">
+                                <option value="NO">Never</option>
+                                <option value="YES">Currently Uses</option>
+                                <option value="PAST">Former User</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alcohol Use</label>
+                            <select formControlName="alcoholUse" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white">
+                                <option value="NO">None</option>
+                                <option value="SOCIAL">Social</option>
+                                <option value="HEAVY">Regular</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Family Medical History</label>
+                        <textarea formControlName="familyHistory" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Genetic conditions, cancers, etc..."></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Dietary Preferences</label>
+                        <input type="text" formControlName="dietaryPreference" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Vegan, Diabetic load, Low sodium...">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Ward Allocation (Final Step) -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5 bg-primary/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">hotel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">05. System Logistics & Allocation</h3>
+                    <p class="text-sm text-slate-500">Finalizing real-time ward and bed link.</p>
+                </div>
+            </div>
+            
+            <div [formGroup]="logisticsForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Ward Unit *</label>
+                    <select formControlName="bedId" class="w-full bg-slate-900/80 border border-primary/30 rounded-xl p-4 text-sm text-white focus:border-primary outline-none appearance-none">
+                        <option value="" disabled selected>Select an optimized bed unit...</option>
+                        <option *ngFor="let b of beds" [value]="b.id">
+                            Ward: {{ b.ward }} — Room: {{ b.room }} — Unit: {{ b.bedNumber }}
+                        </option>
+                    </select>
+                    <p *ngIf="beds.length === 0" class="text-xs text-rose-500 font-bold mt-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">error</span>
+                        CRITICAL: No available units in any ward module.
+                    </p>
+                </div>
+                <div class="space-y-2 text-right flex flex-col justify-end">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Sync Status</p>
+                    <div class="flex items-center justify-end gap-3">
+                        <span class="text-emerald-400 text-xs font-bold">Encrypted End-to-End</span>
+                        <div class="size-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="flex flex-col items-center justify-center py-10 gap-4">
+             <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid" class="w-full max-w-md bg-white text-slate-900 hover:bg-slate-100 font-bold py-4 rounded-2xl transition-all shadow-2xl flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span>Complete Global Sync Admission</span>
+             </button>
+             <p class="text-[11px] text-slate-500 uppercase font-bold tracking-widest">MedNex South Campus Terminal Instance 3.2</p>
+        </section>
+    </form>
+</div>
+
+<!-- Subtle Background Glows -->
+<div class="fixed top-0 right-0 -z-10 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none opacity-50"></div>
+<div class="fixed bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none opacity-50"></div>

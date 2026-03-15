@@ -1,0 +1,107 @@
+.card {
+  padding: 32px;
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+
+  h2 { font-size: 24px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+  p { color: #64748b; font-size: 14px; }
+}
+
+.form-toggle-btn {
+  height: 44px !important;
+  border-radius: 12px !important;
+}
+
+.form-container {
+  margin-bottom: 40px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+::ng-deep .mat-stepper-horizontal {
+    background: transparent !important;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px 0;
+}
+
+.stepper-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.patient-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+  }
+
+  .name-meta {
+    .primary { font-weight: 600; color: #f1f5f9; }
+    .secondary { font-size: 10px; color: #64748b; font-family: monospace; }
+  }
+}
+
+.gender-chip {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    &.m { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
+    &.f { background: rgba(236, 72, 153, 0.1); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.2); }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  color: #94a3b8;
+}
+
+.empty-state {
+  padding: 80px;
+  text-align: center;
+  color: #64748b;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.1; }
+}
+
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
+}

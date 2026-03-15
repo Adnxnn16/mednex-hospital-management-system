@@ -1,0 +1,259 @@
+<div class="p-8 space-y-8 max-w-[1400px] mx-auto w-full" @fadeIn>
+  <!-- Welcome Header -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <ng-container *ngIf="userRole === 'admin'">Morning, Clinical Ops</ng-container>
+        <ng-container *ngIf="userRole === 'doctor'">Doctor's Workspace</ng-container>
+        <ng-container *ngIf="userRole === 'nurse'">Nursing Command Center</ng-container>
+      </h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-1">Here is the real-time status of MedNex Enterprise.</p>
+    </div>
+    <div class="flex gap-2">
+      <button *ngIf="userRole === 'admin'" class="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 shadow-sm text-slate-700 dark:text-white">
+        <span class="material-symbols-outlined text-lg">calendar_month</span>
+        Last 24 Hours
+      </button>
+      <button *ngIf="userRole === 'admin'" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-lg">ios_share</span>
+        Export Data
+      </button>
+      
+      <button *ngIf="userRole === 'doctor'" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-lg">history_edu</span>
+        Open EMR Drawer
+      </button>
+    </div>
+  </div>
+
+  <!-- 1. ADMIN DOMAIN -->
+  <ng-container *ngIf="userRole === 'admin'">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:bg-primary/10"></div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-primary/10 rounded-xl"><span class="material-symbols-outlined text-primary">personal_injury</span></div>
+          <span class="text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg">+12.5%</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Patients</p>
+        <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{{ patientCount }}</h3>
+      </div>
+      
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:bg-emerald-500/10"></div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-emerald-500/10 rounded-xl"><span class="material-symbols-outlined status-mint">bed</span></div>
+          <span class="text-slate-400 text-xs font-bold bg-slate-400/10 px-2 py-1 rounded-lg">Stable</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Beds Managed</p>
+        <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{{ bedCount }}</h3>
+      </div>
+      
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:bg-indigo-500/10"></div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-indigo-500/10 rounded-xl"><span class="material-symbols-outlined text-indigo-500">badge</span></div>
+          <span class="text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg">+3.2%</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Doctors</p>
+        <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{{ doctorCount }}</h3>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:bg-amber-500/10"></div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-amber-500/10 rounded-xl"><span class="material-symbols-outlined text-amber-500">schedule</span></div>
+          <span class="text-amber-500 text-xs font-bold bg-amber-500/10 px-2 py-1 rounded-lg">High Load</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Appointments</p>
+        <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{{ appointmentCount }}</h3>
+      </div>
+    </div>
+
+    <!-- Analytics & Insights Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Bed Occupancy Analytics -->
+      <div class="lg:col-span-2 glass-card rounded-3xl p-8">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Bed Occupancy Analytics</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Live distribution and trends</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400">
+              <span class="material-symbols-outlined text-xl">more_vert</span>
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-around gap-8">
+          <!-- Circular Chart Override using Chart.js -->
+          <div class="relative flex items-center justify-center size-64" *ngIf="bedChartData">
+             <canvas baseChart [data]="bedChartData" [options]="chartOptions" [type]="'doughnut'"></canvas>
+             <div class="absolute text-center mt-4">
+                <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ occupancyRate }}%</p>
+             </div>
+          </div>
+          
+          <div class="flex-1 space-y-4 max-w-xs w-full">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              <div class="flex items-center gap-3">
+                <div class="size-3 rounded-full bg-primary"></div>
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Intensive Care</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              <div class="flex items-center gap-3">
+                <div class="size-3 rounded-full bg-emerald-500"></div>
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">General Ward</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Insights -->
+      <div class="glass-card rounded-3xl p-8 flex flex-col">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white">Quick Insights</h3>
+          <span class="text-primary text-xs font-bold px-2 py-1 bg-primary/10 rounded-lg">Live Tracker</span>
+        </div>
+        <div class="space-y-6 flex-1">
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500 dark:text-slate-400">Audit Logs Detected</span>
+              <span class="font-bold status-mint">{{ recentAuditLogs.length }} Events</span>
+            </div>
+            <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: 100%"></div>
+            </div>
+          </div>
+          
+          <!-- Recent Audit Action List Instead -->
+          <div class="mt-4 pt-4 border-t border-slate-800 space-y-3">
+             <div class="flex gap-3 items-center" *ngFor="let log of recentAuditLogs">
+                <span class="material-symbols-outlined text-primary text-sm">lock_open</span>
+                <div class="flex-1">
+                   <p class="text-xs font-bold text-white">{{ log.action }}</p>
+                   <p class="text-[10px] text-slate-500">{{ log.occurredAt | date:'short' }}</p>
+                </div>
+             </div>
+             <p *ngIf="!recentAuditLogs.length" class="text-xs text-slate-500 italic">No recent system logs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- 2. DOCTOR DOMAIN -->
+  <ng-container *ngIf="userRole === 'doctor'">
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Col -->
+        <div class="lg:col-span-1 space-y-6">
+           <div class="glass-card rounded-3xl p-6">
+              <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                 <h3 class="font-bold text-white">Assigned Patients</h3>
+                 <span class="material-symbols-outlined text-slate-500">search</span>
+              </div>
+              <div class="space-y-3">
+                 <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer transition border border-slate-700/50" *ngFor="let p of myPatients">
+                    <div>
+                       <p class="text-sm font-bold text-white">{{ p.firstName }} {{ p.lastName }}</p>
+                       <p class="text-[11px] text-primary">ID: {{ p.id.slice(0,6) }}</p>
+                    </div>
+                    <button class="text-slate-400 hover:text-white"><span class="material-symbols-outlined">description</span></button>
+                 </div>
+                 <div *ngIf="!myPatients.length" class="text-sm text-slate-500 italic p-4 text-center">No assigned patients</div>
+              </div>
+           </div>
+           
+           <div class="glass-card rounded-3xl p-6">
+              <h3 class="font-bold text-white mb-4">Express Diagnosis</h3>
+              <div class="space-y-4">
+                 <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Chief symptoms...">
+                 <textarea rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Diagnosis and treatment plan..."></textarea>
+                 <button class="w-full bg-primary hover:bg-blue-600 text-white font-bold rounded-lg py-3 text-sm shadow-lg shadow-primary/20 transition">Submit to EMR</button>
+              </div>
+           </div>
+        </div>
+        
+        <!-- Right Col -->
+        <div class="lg:col-span-2 glass-card rounded-3xl p-8 overflow-x-hidden">
+           <h3 class="font-bold text-white text-xl mb-6">Weekly Schedule</h3>
+           <!-- Deep-styling FullCalendar via SCSS to prevent white backgrounds here -->
+           <div class="tailwind-calendar"><full-calendar [options]="calendarOptions"></full-calendar></div>
+        </div>
+     </div>
+  </ng-container>
+
+  <!-- 3. NURSE DOMAIN -->
+  <ng-container *ngIf="userRole === 'nurse'">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+         <div routerLink="/app/admission" class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-primary/50 cursor-pointer">
+             <div class="flex items-center gap-4 mb-2">
+                 <div class="p-3 bg-primary/10 rounded-xl"><span class="material-symbols-outlined text-primary text-2xl">person_add</span></div>
+                 <h3 class="font-bold text-white text-lg">New Admission</h3>
+             </div>
+             <p class="text-slate-400 text-sm ml-16">Launch full 50-field clinical form tracker</p>
+         </div>
+         <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-500/50 cursor-pointer">
+             <div class="flex items-center gap-4 mb-2">
+                 <div class="p-3 bg-emerald-500/10 rounded-xl"><span class="material-symbols-outlined text-emerald-500 text-2xl">bed</span></div>
+                 <h3 class="font-bold text-white text-lg">Bed Status</h3>
+             </div>
+             <p class="text-slate-400 text-sm ml-16">Manage Ward and Availability settings</p>
+         </div>
+         <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-rose-500/50 cursor-pointer">
+             <div class="flex items-center gap-4 mb-2">
+                 <div class="p-3 bg-rose-500/10 rounded-xl"><span class="material-symbols-outlined text-rose-500 text-2xl">logout</span></div>
+                 <h3 class="font-bold text-white text-lg">Discharge Process</h3>
+             </div>
+             <p class="text-slate-400 text-sm ml-16">Clear patients & trigger room cleaning protocols</p>
+         </div>
+      </div>
+      
+      <div class="glass-card rounded-3xl overflow-hidden mt-6">
+        <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">Active Vitals Monitoring Board</h3>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[11px] font-bold">
+             {{ activeBeds }} Occupied Beds
+          </span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-[10px] uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-800">
+                <th class="px-6 py-4 font-bold">Patient ID</th>
+                <th class="px-6 py-4 font-bold">Bed Link</th>
+                <th class="px-6 py-4 font-bold">Blood Pressure</th>
+                <th class="px-6 py-4 font-bold">SpO2</th>
+                <th class="px-6 py-4 font-bold">Temp / HR</th>
+                <th class="px-6 py-4 font-bold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-transparent">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors" *ngFor="let p of wardPatients">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="size-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-primary">{{ p.firstName.charAt(0) }}{{ p.lastName.charAt(0) }}</div>
+                    <div>
+                      <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ p.firstName }} {{ p.lastName }}</p>
+                      <p class="text-xs text-slate-500">VPX-{{ p.id.slice(0, 4) }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4"><span class="text-sm font-mono text-slate-400 bg-slate-800 px-2 py-1 rounded">{{ p.bedId }}</span></td>
+                <td class="px-6 py-4 text-sm text-white font-medium">{{ p.latestBP }}</td>
+                <td class="px-6 py-4 text-sm text-emerald-400 font-bold">{{ p.latestO2 }}%</td>
+                <td class="px-6 py-4 text-sm text-slate-400">{{ p.latestTemp }} °F / {{ p.latestHR }} bpm</td>
+                <td class="px-6 py-4 text-right">
+                  <button class="text-slate-400 hover:text-primary bg-slate-800 p-2 rounded-lg transition"><span class="material-symbols-outlined text-sm">monitor_heart</span></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!wardPatients.length" class="p-8 text-center text-slate-500 italic">No patients assigned to this ward monitor.</div>
+        </div>
+      </div>
+  </ng-container>
+</div>

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["version", "diagnosis"],
+  "properties": {
+    "version": { "type": "string", "enum": ["1.0"] },
+    "diagnosis": { "type": "string", "minLength": 1 },
+    "allergies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "medications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "dosage"],
+        "properties": {
+          "name": { "type": "string" },
+          "dosage": { "type": "string" }
+        }
+      }
+    },
+    "observations": { "type": "string" },
+    "bloodGroup": {
+      "type": "string",
+      "enum": ["A+","A-","B+","B-","AB+","AB-","O+","O-"]
+    }
+  }
+}

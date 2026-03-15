@@ -1,0 +1,113 @@
+<div class="p-8 max-w-[1400px] mx-auto w-full" @fadeIn>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+            <h2 class="text-3xl font-bold tracking-tight text-white">Patient Registry</h2>
+            <p class="text-slate-400 mt-2">Clinical record management and high-fidelity history tracking.</p>
+        </div>
+        <div class="flex items-center gap-3">
+             <button (click)="toggleForm()" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">{{ showForm ? 'close' : 'person_add' }}</span>
+                <span>{{ showForm ? 'Dismiss Form' : 'Register New Patient' }}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Registration form -->
+    <div *ngIf="showForm && !loading" @slideInOut class="glass-card rounded-3xl p-8 border border-primary/20 bg-primary/5 mb-10">
+        <form [formGroup]="demographicsForm" (ngSubmit)="submit()" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">First Name *</label>
+                    <input type="text" formControlName="firstName" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white outline-none focus:border-primary">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Last Name *</label>
+                    <input type="text" formControlName="lastName" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white outline-none focus:border-primary">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Date of Birth</label>
+                    <input type="date" formControlName="dob" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white outline-none focus:border-primary">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gender</label>
+                    <select formControlName="gender" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white outline-none focus:border-primary">
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex justify-end pt-4">
+                <button type="submit" [disabled]="submitting || demographicsForm.invalid" class="bg-white text-slate-900 font-bold py-3 px-8 rounded-xl hover:bg-slate-100 transition shadow-xl disabled:opacity-50">
+                    {{ submitting ? 'Persisting Record...' : 'Finalize Registration' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Patient list -->
+    <div class="glass-card rounded-3xl overflow-hidden border border-white/5">
+        <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white">Active Clinical Records</h3>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
+                <input type="text" placeholder="Search patients..." class="bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:ring-1 focus:ring-primary outline-none w-64">
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[10px] uppercase tracking-wider text-slate-500 bg-slate-900/50 border-b border-slate-800">
+                        <th class="px-6 py-4 font-bold">Patient Profile</th>
+                        <th class="px-6 py-4 font-bold">Contact Address</th>
+                        <th class="px-6 py-4 font-bold">Gender / Age</th>
+                        <th class="px-6 py-4 font-bold">Registration</th>
+                        <th class="px-6 py-4 font-bold text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                    <tr *ngFor="let p of patients" class="hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold shadow-inner uppercase">
+                                    {{ p.firstName.charAt(0) }}{{ p.lastName.charAt(0) }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white">{{ p.firstName }} {{ p.lastName }}</p>
+                                    <p class="text-[11px] text-slate-500 font-mono tracking-tighter uppercase">PID: {{ p.id.slice(0,8) }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-400">
+                            {{ p.email || 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-xs font-bold px-2 py-1 rounded-lg"
+                                [ngClass]="p.gender === 'MALE' ? 'bg-sky-500/10 text-sky-400' : 'bg-pink-500/10 text-pink-400'">
+                                {{ p.gender }}
+                            </span>
+                            <span class="text-[11px] text-slate-500 ml-2">{{ p.dob | date:'mediumDate' }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-500">
+                            {{ p.createdAt | date:'shortDate' }}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a [routerLink]="['./', p.id]" class="text-primary hover:text-white transition flex items-center justify-end gap-1 text-xs font-bold uppercase tracking-wider">
+                                View EMR <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="patients.length === 0" class="p-20 text-center space-y-4">
+                 <span class="material-symbols-outlined text-6xl text-slate-800">person_search</span>
+                 <p class="text-slate-500 font-medium">Clinical registry is currently empty.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none opacity-40"></div>
