@@ -50,10 +50,10 @@ public class RedissonConfig {
     @Bean
     public HibernatePropertiesCustomizer hibernateRedissonCustomizer(
             RedissonClient redissonClient) {
-        return hibernateProperties ->
-            hibernateProperties.put(
-                "hibernate.cache.redisson.client",
-                redissonClient
-            );
+        return hibernateProperties -> {
+            hibernateProperties.put("hibernate.cache.redisson.client", redissonClient);
+            hibernateProperties.put("hibernate.redisson.client", redissonClient);
+            hibernateProperties.put("hibernate.redisson.config", "");
+        };
     }
 }

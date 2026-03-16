@@ -1,21 +1,14 @@
 <configuration>
   <springProfile name="!test">
-    <appender name="JSON"
+    <appender name="CONSOLE"
       class="ch.qos.logback.core.ConsoleAppender">
-      <encoder
-        class="net.logstash.logback.encoder.LogstashEncoder">
-        <includeMdc>true</includeMdc>
-        <customFields>{"app":"mednex-backend"}</customFields>
-        <fieldNames>
-          <timestamp>timestamp</timestamp>
-          <message>message</message>
-          <logger>logger</logger>
-          <level>level</level>
-        </fieldNames>
+      <encoder>
+        <pattern>%d{HH:mm:ss} %-5level %logger{36} - %msg%n
+        </pattern>
       </encoder>
     </appender>
     <root level="INFO">
-      <appender-ref ref="JSON"/>
+      <appender-ref ref="CONSOLE"/>
     </root>
   </springProfile>
 
