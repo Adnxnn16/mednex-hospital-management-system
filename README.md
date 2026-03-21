@@ -6,23 +6,33 @@ MedNex is an enterprise-grade, multi-tenant Hospital Management System (HMS) bui
 
 ## 🖼️ Product UI Showcase
 
-### 1. Unified Login Portal
-Experience a premium, role-based entry point with a modern blue glow effect and intelligent role selection.
+A comprehensive visual guide to the MedNex Enterprise ecosystem.
 
-![MedNex Login Portal](screenshots/login_portal.png)
+### 1. Primary Access & Portals
+| **Image 1: Login Page** | **Image 8: Sign Out** |
+| :---: | :---: |
+| ![Login Page](screenshots/image1_login_page.png) | ![Sign Out](screenshots/image8_signout.png) |
 
-### 2. High-Fidelity Dashboards
-Role-specific command centers for Admins, Doctors, and Nurses.
+---
 
-| **Doctor Dashboard** | **Nurse Dashboard** |
-| :--- | :--- |
-| ![Doctor Dashboard](screenshots/login_portal.png) | ![Nurse Dashboard](screenshots/login_portal.png) |
-*(Note: Using placeholder verification captures for layout preview)*
+### 2. Role-Based Access (Sign-In)
+| **Image 2: Admin Sign-In** | **Image 4: Doctor Sign-In** | **Image 6: Nurse Sign-In** |
+| :---: | :---: | :---: |
+| ![Admin Sign-In](screenshots/image2_admin_signin.png) | ![Doctor Sign-In](screenshots/image4_doctor_signin.png) | ![Nurse Sign-In](screenshots/image6_nurse_signin.png) |
 
-### 3. Branded Keycloak Integration
-Seamless security with custom MedNex themes for logout and session management.
+---
 
-![Keycloak Branded UI](screenshots/keycloak_logout.png)
+### 3. Operational Dashboards
+| **Image 3: Admin Dashboard** | **Image 5: Doctor Dashboard** | **Image 7: Nurse Dashboard** |
+| :---: | :---: | :---: |
+| ![Admin Dashboard](screenshots/image3_admin_dashboard.png) | ![Doctor Dashboard](screenshots/image5_doctor_dashboard.png) | ![Nurse Dashboard](screenshots/image7_nurse_dashboard.png) |
+
+---
+
+### 4. Enterprise Security (Keycloak)
+| **Image 9: Keyclock Sign-In** | **Image 10: Keyclock Dashboard** |
+| :---: | :---: |
+| ![Keycloak Sign-In](screenshots/image9_keycloak_signin.png) | ![Keycloak Dashboard](screenshots/image10_keycloak_dashboard.png) |
 
 ---
 
