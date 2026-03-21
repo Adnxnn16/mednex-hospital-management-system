@@ -15,25 +15,26 @@
     <!-- Registration Form -->
     <div *ngIf="showForm && !loading" @slideInOut class="glass-card rounded-3xl p-8 border border-primary/20 bg-primary/5 mb-10">
         <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Legal Full Name</label>
-                    <input type="text" formControlName="fullName" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Dr. John Doe">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">First Name *</label>
+                    <input type="text" formControlName="firstName" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="John">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Last Name *</label>
+                    <input type="text" formControlName="lastName" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Doe">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Specialisation *</label>
+                    <input type="text" formControlName="specialisation" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. Cardiology">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Licence Number *</label>
+                    <input type="text" formControlName="licenceNumber" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="LIC-XXX">
                 </div>
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Internal Email</label>
                     <input type="email" formControlName="email" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="john.doe@mednex.local">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Clinical Specialty</label>
-                    <input type="text" formControlName="specialty" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. Cardiology">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Role Assignment</label>
-                    <select class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
-                        <option value="DOCTOR">Doctor</option>
-                        <option value="NURSE">Nurse</option>
-                    </select>
                 </div>
             </div>
             <div class="flex justify-end pt-4">
@@ -69,10 +70,10 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="size-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-primary font-bold shadow-inner">
-                                    {{ d.fullName.charAt(0) }}
+                                    {{ (d.firstName || '').charAt(0) }}
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-white">{{ d.fullName }}</p>
+                                    <p class="text-sm font-bold text-white">{{ d.firstName }} {{ d.lastName }}</p>
                                     <p class="text-[11px] text-slate-500 uppercase tracking-tighter">ID: {{ d.id.slice(0,8) }}</p>
                                 </div>
                             </div>
@@ -82,7 +83,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-lg">
-                                {{ d.specialty || 'General Care' }}
+                                {{ d.specialisation || 'General Care' }}
                             </span>
                         </td>
                         <td class="px-6 py-4">

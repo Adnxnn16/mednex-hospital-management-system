@@ -1,7 +1,6 @@
 package com.mednex.web.request;
 
 import java.time.LocalDate;
-
 import jakarta.validation.constraints.NotBlank;
 
 public record CreatePatientRequest(
@@ -18,4 +17,42 @@ public record CreatePatientRequest(
 		String emergencyContactPhone,
 		String insuranceProvider,
 		String policyNumber,
-		String medicalHistory) {}
+		String medicalHistory,
+
+		// Clinical/Demographic Fields (for FR-09 compliance)
+		String middleName,
+		String suffix,
+		String preferredName,
+		String ssn,
+		String nationality,
+		String primaryLanguage,
+		String religion,
+		String maritalStatus,
+		Double weight,
+		Double height,
+		Double bmi,
+		String tobaccoUse,
+		String alcoholUse,
+		String drugUse,
+		String exerciseFrequency,
+		String dietaryPreference,
+		Boolean organDonor,
+		Boolean advancedDirective,
+		String preferredPharmacy,
+		String pharmacyPhone,
+		String employerName,
+		String employerPhone,
+		String employerAddress,
+		String emergencyContactRelation,
+		String emergencyContactEmail,
+		String emergencyContactAddress,
+		String primaryPhysicianName,
+		String primaryPhysicianPhone,
+		String referringPhysicianName,
+		String reasonForAdmission,
+		String knownAllergies,
+		String pastMedicalConditions,
+		String pastSurgeries,
+		String currentMedications,
+		String familyMedicalHistory,
+		String comments) {}

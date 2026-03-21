@@ -47,6 +47,10 @@ export class AuthService {
     return this.oauthService.getAccessToken();
   }
 
+  getToken(): string {
+    return this.accessToken();
+  }
+
   refreshToken(): Observable<string> {
     return from(this.oauthService.refreshToken()).pipe(
       map(() => this.accessToken())
@@ -152,8 +156,21 @@ export class AuthService {
 
   login(roleHint?: 'admin' | 'doctor' | 'nurse') {
     this.setMockRole(null); // Clear mock on real login attempt
-    const params = roleHint ? { login_hint: roleHint } : undefined;
+    const params = roleHint
+      ? { login_hint: roleHint, prompt: 'login' }
+      : { prompt: 'login' };
     this.oauthService.initLoginFlow(undefined, params);
+  }
+
+  async loginWithPassword(username: string, pass: string): Promise<boolean> {
+    this.setMockRole(null);
+    try {
+      await this.oauthService.fetchTokenUsingPasswordFlow(username, pass);
+      return true;
+    } catch (err) {
+      console.error('Password flow login failed', err);
+      return false;
+    }
   }
 
   signup(roleHint?: 'admin' | 'doctor' | 'nurse') {
@@ -183,7 +200,22 @@ export class AuthService {
   async logout() {
     this.setMockRole(null);
     if (this._expiryTimer) clearTimeout(this._expiryTimer);
-    this.oauthService.logOut();
-    await this.router.navigateByUrl('/');
+    
+    // For ROPC flow, we lack an id_token for Keycloak's logout redirect.
+    // Perform a local logout to clear tokens, then navigate to custom logout page.
+    try {
+      this.oauthService.logOut(true); // Attempt local-only logout
+    } catch {
+      // ignore
+    }
+    
+    // Manually ensure storage is wiped
+    sessionStorage.clear();
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('expires_at');
+    
+    await this.router.navigateByUrl('/logout');
   }
 }

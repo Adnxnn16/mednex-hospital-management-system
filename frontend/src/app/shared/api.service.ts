@@ -25,10 +25,17 @@ export type PatientDto = {
 
 export type DoctorDto = {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
+  specialisation: string;
+  licenceNumber: string;
+  tenantId: string | null;
   email: string | null;
-  specialty: string | null;
   createdAt: string;
+  /** Computed display name (backend may omit; fallback: firstName + ' ' + lastName) */
+  fullName?: string;
+  /** Alias for specialisation (backward compat) */
+  specialty?: string;
 };
 
 export type BedDto = {
@@ -41,6 +48,15 @@ export type BedDto = {
 };
 
 export type BedOccupancyDto = {
+  tenantId: string;
+  totalBeds: number;
+  occupiedBeds: number;
+  occupancyRate: number;
+  wards: WardOccupancyItemDto[];
+};
+
+export type WardOccupancyItemDto = {
+  wardName: string;
   totalBeds: number;
   occupiedBeds: number;
   occupancyRate: number;
@@ -67,7 +83,7 @@ export type AppointmentDto = {
 };
 
 export type AuditLogDto = {
-  id: number;
+  id: string;
   tenantId: string;
   userId: string | null;
   action: string;
@@ -114,7 +130,13 @@ export class ApiService {
     return this.http.get<DoctorDto[]>(`${this.base}/api/doctors`);
   }
 
-  createDoctor(payload: { fullName: string; email?: string | null; specialty?: string | null }) {
+  createDoctor(payload: {
+    firstName: string;
+    lastName: string;
+    specialisation: string;
+    licenceNumber: string;
+    email?: string | null;
+  }) {
     return this.http.post<DoctorDto>(`${this.base}/api/doctors`, payload);
   }
 

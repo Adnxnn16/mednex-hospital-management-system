@@ -58,9 +58,13 @@ export class AdmissionComponent implements OnInit {
       height: [''],
       email: ['', [Validators.email]],
       phone: ['', [Validators.required, indianPhoneNumber]],
+      alternatePhone: ['', [indianPhoneNumber]],
       address: [''],
+      addressLine2: [''],
       city: [''],
       state: [''],
+      addressType: ['RESIDENTIAL'],
+      residenceDuration: [''],
       zip: ['', [pinCode]],
       country: ['USA'],
       emerName: ['', [Validators.required]],
@@ -103,13 +107,38 @@ export class AdmissionComponent implements OnInit {
       policyNumber: ['', [Validators.required]],
       groupNumber: [''],
       expiry: [''],
-      secondaryProvider: ['']
+      insuranceValidUntil: [''],
+      secondaryProvider: [''],
+      paymentMethod: ['CASH'],
+      consentSigned: [false],
+      consentDate: ['']
     });
 
     this.logisticsForm = this.fb.group({
       bedId: ['', [Validators.required]],
+      admittingDoctorId: [''],
+      wardName: [''],
+      admissionDate: [''],
+      admissionType: ['PLANNED'],
+      referralSource: [''],
+      chiefComplaint: [''],
+      preliminaryDiagnosis: [''],
+      admissionNotes: [''],
       notes: ['']
     });
+  }
+
+  /** Total form controls across all admission forms (PRD: ≥50). */
+  get totalFormControlCount(): number {
+    const count = (fg: FormGroup | null | undefined): number => {
+      if (!fg) return 0;
+      let n = 0;
+      for (const c of Object.values(fg.controls)) {
+        n += c instanceof FormGroup ? count(c) : 1;
+      }
+      return n;
+    };
+    return count(this.demographicsForm) + count(this.clinicalForm) + count(this.insuranceForm) + count(this.logisticsForm);
   }
 
   get clinicalHistoryForm(): FormGroup {

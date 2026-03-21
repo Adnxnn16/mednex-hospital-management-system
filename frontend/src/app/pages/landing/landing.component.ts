@@ -81,7 +81,7 @@ export class LandingComponent {
   }
 
   login(role: Role['key']) {
-    this.router.navigate(['/login'], { queryParams: { role } });
+    this.router.navigate(['/login', role]);
   }
 
 

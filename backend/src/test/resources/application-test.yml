@@ -1,0 +1,54 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS hospital_a\;CREATE SCHEMA IF NOT EXISTS hospital_b
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+          region:
+            factory_class: org.hibernate.cache.internal.NoCachingRegionFactory
+
+  data:
+    redis:
+      enabled: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9999/realms/test  # fake, overridden below
+
+  mail:
+    host: localhost
+    port: 25
+    username: test
+    password:
+
+  threads:
+    virtual:
+      enabled: false  # disable for test stability
+
+app:
+  pdf:
+    encryption-key: test-key-for-unit-tests
+
+logging:
+  level:
+    com.mednex: DEBUG
+    org.springframework.security: DEBUG

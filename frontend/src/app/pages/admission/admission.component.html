@@ -12,7 +12,7 @@
                 </span>
                 Secure Triage Channel
             </div>
-            <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center gap-2">
+            <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid || logisticsForm.invalid || insuranceForm.invalid" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">rocket_launch</span>
                 <span>{{ submitting ? 'Admitting...' : 'Finalize Admission' }}</span>
             </button>
@@ -148,8 +148,27 @@
                     <input type="text" formControlName="address" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
                 </div>
                 <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alternate Phone</label>
+                    <input type="text" formControlName="alternatePhone" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="+1-555-0100">
+                </div>
+                <div class="space-y-2">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emergency Phone *</label>
                     <input type="text" formControlName="emerPhone" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Address Line 2</label>
+                    <input type="text" formControlName="addressLine2" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Address Type</label>
+                    <select formControlName="addressType" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="RESIDENTIAL">Residential</option>
+                        <option value="COMMERCIAL">Commercial</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Residence Duration</label>
+                    <input type="text" formControlName="residenceDuration" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. 2 years">
                 </div>
             </div>
         </section>
@@ -217,6 +236,59 @@
             </div>
         </section>
 
+        <!-- Section 4b: Insurance & Billing -->
+        <section class="glass-card rounded-3xl p-8 border border-white/5">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="size-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500">
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Insurance & Billing</h3>
+                    <p class="text-sm text-slate-500">Coverage and payment details.</p>
+                </div>
+            </div>
+            <div [formGroup]="insuranceForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Insurance Provider *</label>
+                    <input type="text" formControlName="provider" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Policy Number *</label>
+                    <input type="text" formControlName="policyNumber" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Group Number</label>
+                    <input type="text" formControlName="groupNumber" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Expiry Date</label>
+                    <input type="date" formControlName="expiry" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Valid Until</label>
+                    <input type="date" formControlName="insuranceValidUntil" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Payment Method</label>
+                    <select formControlName="paymentMethod" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                        <option value="CASH">Cash</option>
+                        <option value="INSURANCE">Insurance</option>
+                        <option value="CARD">Card</option>
+                    </select>
+                </div>
+                <div class="space-y-2 flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" formControlName="consentSigned" class="rounded border-slate-800 bg-slate-900 text-primary">
+                        <span class="text-sm text-slate-300">Consent Signed</span>
+                    </label>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Consent Date</label>
+                    <input type="date" formControlName="consentDate" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+            </div>
+        </section>
+
         <!-- Section 5: Ward Allocation (Final Step) -->
         <section class="glass-card rounded-3xl p-8 border border-white/5 bg-primary/5">
             <div class="flex items-center gap-4 mb-8">
@@ -229,7 +301,7 @@
                 </div>
             </div>
             
-            <div [formGroup]="logisticsForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div [formGroup]="logisticsForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Ward Unit *</label>
                     <select formControlName="bedId" class="w-full bg-slate-900/80 border border-primary/30 rounded-xl p-4 text-sm text-white focus:border-primary outline-none appearance-none">
@@ -243,6 +315,34 @@
                         CRITICAL: No available units in any ward module.
                     </p>
                 </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Admission Date</label>
+                    <input type="date" formControlName="admissionDate" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Admission Type</label>
+                    <select formControlName="admissionType" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                        <option value="EMERGENCY">Emergency</option>
+                        <option value="PLANNED">Planned</option>
+                        <option value="TRANSFER">Transfer</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Referral Source</label>
+                    <input type="text" formControlName="referralSource" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none" placeholder="e.g. GP, ER">
+                </div>
+                <div class="space-y-2 lg:col-span-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Chief Complaint</label>
+                    <input type="text" formControlName="chiefComplaint" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2 lg:col-span-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Preliminary Diagnosis</label>
+                    <input type="text" formControlName="preliminaryDiagnosis" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none">
+                </div>
+                <div class="space-y-2 lg:col-span-3">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Admission Notes</label>
+                    <textarea formControlName="admissionNotes" rows="2" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-sm text-white focus:border-primary outline-none"></textarea>
+                </div>
                 <div class="space-y-2 text-right flex flex-col justify-end">
                     <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Sync Status</p>
                     <div class="flex items-center justify-end gap-3">
@@ -254,7 +354,7 @@
         </section>
 
         <section class="flex flex-col items-center justify-center py-10 gap-4">
-             <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid" class="w-full max-w-md bg-white text-slate-900 hover:bg-slate-100 font-bold py-4 rounded-2xl transition-all shadow-2xl flex items-center justify-center gap-3">
+             <button (click)="submit()" [disabled]="submitting || demographicsForm.invalid || logisticsForm.invalid || insuranceForm.invalid" class="w-full max-w-md bg-white text-slate-900 hover:bg-slate-100 font-bold py-4 rounded-2xl transition-all shadow-2xl flex items-center justify-center gap-3">
                 <span class="material-symbols-outlined">check_circle</span>
                 <span>Complete Global Sync Admission</span>
              </button>

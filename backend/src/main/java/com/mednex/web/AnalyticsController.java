@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mednex.service.AnalyticsService;
-import com.mednex.web.dto.BedOccupancyDto;
+import com.mednex.web.dto.BedOccupancyResponseDto;
 
 @RestController
 @RequestMapping("/api/analytics")
@@ -18,8 +18,8 @@ public class AnalyticsController {
 	}
 
 	@GetMapping("/bed-occupancy")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_DOCTOR')")
-	public BedOccupancyDto bedOccupancy() {
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	public BedOccupancyResponseDto bedOccupancy() {
 		return service.bedOccupancy();
 	}
 }

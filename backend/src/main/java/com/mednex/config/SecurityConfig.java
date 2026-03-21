@@ -48,6 +48,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	@org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(JwtDecoder.class)
 	public JwtDecoder jwtDecoder(SecurityProperties props) {
 		NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(props.jwkSetUri()).build();
 		var issuerValidator = JwtValidators.createDefaultWithIssuer(props.issuer());

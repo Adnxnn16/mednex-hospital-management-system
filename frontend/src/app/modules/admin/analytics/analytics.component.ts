@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService, BedOccupancyDto } from '../../../shared/api.service';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartData, ChartType } from 'chart.js';
+import type { ChartData, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-analytics',

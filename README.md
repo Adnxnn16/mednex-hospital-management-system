@@ -2,6 +2,30 @@
 
 MedNex is an enterprise-grade, multi-tenant Hospital Management System (HMS) built with a focus on high-performance clinical logistics, robust security, and a premium Glassmorphism user experience.
 
+---
+
+## 🖼️ Product UI Showcase
+
+### 1. Unified Login Portal
+Experience a premium, role-based entry point with a modern blue glow effect and intelligent role selection.
+
+![MedNex Login Portal](screenshots/login_portal.png)
+
+### 2. High-Fidelity Dashboards
+Role-specific command centers for Admins, Doctors, and Nurses.
+
+| **Doctor Dashboard** | **Nurse Dashboard** |
+| :--- | :--- |
+| ![Doctor Dashboard](screenshots/login_portal.png) | ![Nurse Dashboard](screenshots/login_portal.png) |
+*(Note: Using placeholder verification captures for layout preview)*
+
+### 3. Branded Keycloak Integration
+Seamless security with custom MedNex themes for logout and session management.
+
+![Keycloak Branded UI](screenshots/keycloak_logout.png)
+
+---
+
 ## 🚀 Project Overview (Week 1 - Week 4)
 
 This project has evolved from a basic multi-tenant foundation to a sophisticated clinical operational platform.
@@ -40,28 +64,107 @@ This project has evolved from a basic multi-tenant foundation to a sophisticated
 
 ### Prerequisites
 
-- Docker & Docker Compose
-- JDK 21+
-- Node.js 20+
+> [!IMPORTANT]
+> **Ensure your Docker Desktop / Docker Engine is running** before executing any commands below.
 
-### Setup
+- **Docker Desktop** (Required for Database and Keycloak)
+- **JDK 21** (Required for Backend)
+- **Node.js 20+** (Required for Frontend)
 
-1. **Infrastructure**:
-   ```bash
-   docker-compose up -d
-   ```
-2. **Backend**:
-   ```bash
-   cd backend
-   ./mvnw spring-boot:run
-   ```
-3. **Frontend**:
-   ```bash
-   cd frontend
-   npm install
-   npm start
-   ```
+### 1) Install Frontend Dependencies
+
+```powershell
+cd frontend
+npm install
+```
+
+### 2) Build Frontend (Production Check)
+
+```powershell
+npx ng build --configuration production
+```
+
+Expected output includes:
+
+```text
+Application bundle generation complete.
+```
+
+### 3) Run Backend Locally (Optional, outside Docker)
+
+Open a new terminal:
+
+```powershell
+cd backend
+.\mvnw.cmd clean spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+Health check (another terminal):
+
+```powershell
+curl.exe -s http://localhost:8081/actuator/health/readiness
+```
+
+Expected:
+
+```json
+{ "status": "UP" }
+```
+
+Stop local backend with `Ctrl + C` before starting Docker backend.
+
+### 4) Run Full Stack with Docker
+
+From project root:
+
+```powershell
+docker-compose down -v
+docker-compose up --build -d
+docker-compose ps
+```
+
+Expected services:
+
+- `mednex-postgres-1` healthy
+- `mednex-redis-1` healthy
+- `mednex-keycloak-1` healthy
+- `mednex-backend-1` healthy
+- `mednex-frontend-1` healthy
+
+### 5) Run Backend Tests
+
+```powershell
+cd backend
+.\mvnw.cmd test "-Dspring.profiles.active=test"
+```
+
+Expected output includes:
+
+```text
+BUILD SUCCESS
+```
+
+### Step-by-Step Execution
+1.  **Start Infrastructure:** `docker-compose up -d postgres keycloak` (Start Docker Engine first!)
+2.  **Start Backend:** `cd backend` then `./mvnw spring-boot:run`
+3.  **Start Frontend:** `cd frontend` then `npm install` and `npm start`
 
 ---
 
-_Created for the MedNex Enterprise Development Review Session._
+## 🔐 Role-Specific Credentials
+Use these credentials at the unified login portal to access role-specific dashboards:
+
+| Role | Username | Password | Dashboard Features |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin1` | `admin123` | Hospital analytics, inventory, and bed occupancy. |
+| **Doctor** | `doctor1` | `doctor123` | Patient records, clinical schedule, and consultations. |
+| **Nurse** | `nurse1` | `nurse123` | Ward logs, medication tracking, and vitals. |
+
+### Keycloak System Access
+- **Admin Console**: [http://localhost:8080/admin](http://localhost:8080/admin)
+- **Login**: `admin` / `admin`
+
+---
+
+_Created for the MedNex Enterprise Final Review Session._
+```

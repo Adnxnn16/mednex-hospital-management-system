@@ -1,0 +1,99 @@
+@import 'variables';
+
+.doctor-dash { 
+  padding: 28px; 
+  font-family: $font-family;
+}
+
+.role-badge {
+  display: inline-block;
+  background: $badge-bg-tint;
+  color: $primary-color;
+  font-size: $badge-font-size;
+  font-weight: $badge-font-weight;
+  padding: $badge-padding;
+  border-radius: $badge-border-radius;
+  margin-bottom: 12px;
+}
+
+.welcome-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(34,163,255,0.12), rgba(99,102,241,0.08));
+  border: 1px solid rgba(34,163,255,0.2);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+.welcome-text h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; color: white; }
+.welcome-text p  { margin: 0; color: $text-muted; font-size: 14px; }
+
+.quick-stats { display: flex; gap: 32px; }
+.qstat { text-align: center; }
+.qstat-val { display: block; font-size: 28px; font-weight: 800; color: $primary-color; }
+.qstat-lbl { font-size: 12px; color: $text-muted; font-weight: 500; }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+.calendar-card { grid-row: span 2; }
+
+.dash-card {
+  background: $card-bg-color;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 20px;
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  .material-symbols-outlined { color: $primary-color; font-size: 20px; }
+  h3 { margin: 0; font-size: 15px; font-weight: 600; color: white; flex: 1; }
+  .view-all { font-size: 12px; color: $primary-color; text-decoration: none; font-weight: 600; }
+}
+
+/* Appointment list */
+.appt-list { display: flex; flex-direction: column; gap: 8px; }
+.appt-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; }
+.appt-time { font-size: 13px; font-weight: 600; color: $primary-color; min-width: 44px; }
+.appt-detail { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.appt-title { font-size: 13px; color: white; font-weight: 500; }
+.appt-status { font-size: 11px; font-weight: 600; }
+.status-booked    { color: #f59e0b; }
+.status-scheduled { color: #38bdf8; }
+.status-completed { color: #22c55e; }
+.status-cancelled { color: $error-color; }
+
+/* Patients */
+.patient-list { display: flex; flex-direction: column; gap: 6px; }
+.patient-row { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 10px; transition: background 0.15s; }
+.patient-row:hover { background: rgba(255,255,255,0.03); }
+.patient-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,$primary-color,$accent-color); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+.patient-info { flex: 1; }
+.patient-name { display: block; font-size: 13px; font-weight: 600; color: white; }
+.patient-sub  { font-size: 11px; color: $text-muted; }
+.badge-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; background: rgba(34,197,94,0.12); color: #22c55e; border-radius: 8px; }
+
+/* Loading shimmer */
+.loading-row { display: flex; flex-direction: column; gap: 8px; }
+.shimmer { height: 48px; border-radius: 10px; background: linear-gradient(90deg,rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 24px; color: $text-muted; span { font-size: 32px; display: block; margin-bottom: 8px; } p { font-size: 13px; margin: 0; } }
+
+/* FullCalendar overrides */
+::ng-deep .fc { color: #e2e8f0; font-size: 13px; }
+::ng-deep .fc .fc-toolbar-title { font-size: 15px; font-weight: 700; }
+::ng-deep .fc-theme-standard td, ::ng-deep .fc-theme-standard th { border-color: rgba(255,255,255,0.06); }
+::ng-deep .fc .fc-col-header-cell-cushion { color: $text-muted; }
+::ng-deep .fc .fc-daygrid-day-number { color: $text-muted; }
+::ng-deep .fc .fc-button { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #e2e8f0; font-size: 12px; }
+::ng-deep .fc .fc-button-active { background: $primary-color !important; border-color: $primary-color !important; }

@@ -1,8 +1,9 @@
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { oauthConfig } from './auth.config';
+import { SessionService } from '../core/services/session.service';
 
-export function initializeAuth(oauth: OAuthService, router: Router) {
+export function initializeAuth(oauth: OAuthService, router: Router, sessionService: SessionService) {
   return async () => {
     oauth.configure(oauthConfig);
     oauth.setStorage(localStorage);
@@ -13,6 +14,7 @@ export function initializeAuth(oauth: OAuthService, router: Router) {
     if (oauth.hasValidAccessToken()) {
       const token = oauth.getAccessToken();
       if (token) {
+        sessionService.startExpiryWatch(token);
         const parts = token.split('.');
         if (parts.length >= 2) {
           const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));

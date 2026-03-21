@@ -1,6 +1,10 @@
 package com.mednex.service;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,12 +14,14 @@ import com.mednex.domain.Patient;
 import com.mednex.repo.AppointmentRepository;
 import com.mednex.repo.DoctorRepository;
 import com.mednex.repo.PatientRepository;
+import com.mednex.tenant.TenantContext;
 import com.mednex.audit.AuditService;
 import com.mednex.web.dto.AppointmentDto;
 import com.mednex.web.request.CreateAppointmentRequest;
 
 @Service
 public class AppointmentService {
+	private static final Logger log = LoggerFactory.getLogger(AppointmentService.class);
 	private final AppointmentRepository appointmentRepo;
 	private final PatientRepository patientRepo;
 	private final DoctorRepository doctorRepo;
@@ -31,6 +37,7 @@ public class AppointmentService {
 		this.auditService = auditService;
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_DOCTOR','ROLE_NURSE')")
 	@Transactional(readOnly = true)
 	public List<AppointmentDto> list() {
 		return appointmentRepo.findAll().stream()
@@ -39,6 +46,7 @@ public class AppointmentService {
 				.toList();
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_DOCTOR','ROLE_NURSE')")
 	@Transactional(isolation = org.springframework.transaction.annotation.Isolation.SERIALIZABLE)
 	public AppointmentDto book(CreateAppointmentRequest req) {
 		// Use pessimistic locking to avoid race conditions
@@ -48,9 +56,21 @@ public class AppointmentService {
 		}
 
 		Patient patient = patientRepo.findById(req.patientId())
-				.orElseThrow(() -> new NotFoundException("Patient not found"));
+				.orElseThrow(() -> {
+					log.warn("SECURITY_PROBE tenantId={} patientId={}",
+						TenantContext.getTenantId(), req.patientId());
+					return new AccessDeniedException(
+						"Access denied: resource not available in current tenant context"
+					);
+				});
 		Doctor doctor = doctorRepo.findById(req.doctorId())
-				.orElseThrow(() -> new NotFoundException("Doctor not found"));
+				.orElseThrow(() -> {
+					log.warn("SECURITY_PROBE tenantId={} doctorId={}",
+						TenantContext.getTenantId(), req.doctorId());
+					return new AccessDeniedException(
+						"Access denied: resource not available in current tenant context"
+					);
+				});
 
 		Appointment appt = new Appointment();
 		appt.setPatient(patient);
@@ -60,7 +80,7 @@ public class AppointmentService {
 		appt = appointmentRepo.save(appt);
 
 		auditService.log("BOOK_APPOINTMENT", "Appointment", appt.getId().toString(),
-				"Scheduled session for " + patient.getFirstName());
+				patient.getId(), null, "Scheduled session for " + patient.getFirstName());
 
 		if (patient.getEmail() != null && !patient.getEmail().isBlank()) {
 			emailService.sendAppointmentConfirmation(patient.getEmail(), "MedNex: Appointment Confirmed",

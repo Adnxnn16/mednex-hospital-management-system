@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/${DB_NAME:mednex}
+    username: ${DB_USERNAME:mednex}
+    password: ${DB_PASSWORD:mednex}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/mednex
+
+  data:
+    redis:
+      enabled: false
+      host: localhost
+      port: 6379
+
+  jpa:
+    properties:
+      hibernate:
+        cache:
+          region:
+            factory_class: org.hibernate.cache.internal.NoCachingRegionFactory
+          use_query_cache: false
+          use_second_level_cache: false
+
+  threads:
+    virtual:
+      enabled: true
+
+  mail:
+    host: localhost
+    port: 25
+
+app:
+  pdf:
+    encryption-key: ${APP_PDF_ENCRYPTION_KEY:dev-key-change-in-production}

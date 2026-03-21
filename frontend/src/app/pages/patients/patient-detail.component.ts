@@ -126,71 +126,7 @@ import { AuthService } from '../../auth/auth.service';
   </div>
 </div>
   `,
-  styles: [`
-    .patient-detail-page { padding: 24px; max-width: 1400px; margin: 0 auto; }
-    
-    .header-actions { margin-bottom: 24px; }
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #94A3B8; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-    .back-link:hover { color: #fff; }
-    .back-link .material-symbols-outlined { font-size: 18px; }
-
-    .content-grid { display: grid; grid-template-columns: 1fr 450px; gap: 24px; align-items: start; }
-    
-    .pg-card { background: #111827; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-    .card-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; color: white; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .card-title .material-symbols-outlined { color: #22A3FF; font-size: 20px; }
-
-    /* Patient Header */
-    .patient-header-card { display: flex; gap: 24px; align-items: center; background: linear-gradient(135deg, rgba(34,163,255,0.08), rgba(99,102,241,0.05)); border: 1px solid rgba(34,163,255,0.15); }
-    .avatar { width: 80px; height: 80px; border-radius: 20px; background: linear-gradient(135deg, #22A3FF, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: white; box-shadow: 0 8px 16px rgba(34,163,255,0.2); }
-    .info h2 { margin: 0 0 8px; font-size: 24px; font-weight: 700; color: white; }
-    .meta { display: flex; gap: 16px; margin-bottom: 12px; }
-    .meta span { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #94A3B8; }
-    .meta span .material-symbols-outlined { font-size: 16px; color: #64748B; }
-    .contact-badges { display: flex; gap: 8px; }
-    .badge { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 12px; color: #cbd5e1; }
-    .badge .material-symbols-outlined { font-size: 14px; color: #22A3FF; }
-
-    /* Timeline */
-    .timeline { position: relative; padding-left: 20px; }
-    .timeline::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 0; width: 2px; background: rgba(255,255,255,0.05); }
-    .timeline-item { position: relative; padding-bottom: 32px; }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-dot { position: absolute; left: -20px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: #22A3FF; border: 3px solid #111827; box-shadow: 0 0 0 2px rgba(34,163,255,0.2); }
-    .timeline-content { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 16px; }
-    .time-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .date { font-size: 13px; font-weight: 600; color: #cbd5e1; }
-    .doc { font-size: 12px; color: #22A3FF; background: rgba(34,163,255,0.1); padding: 2px 8px; border-radius: 6px; }
-    .clinical-block { font-size: 13px; color: #94A3B8; margin-bottom: 8px; line-height: 1.5; }
-    .clinical-block strong { color: #e2e8f0; font-weight: 600; }
-    .clinical-block.notes { font-style: italic; color: #64748B; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.05); }
-    
-    .empty-timeline { text-align: center; padding: 40px 20px; color: #64748B; }
-    .empty-timeline .material-symbols-outlined { font-size: 48px; opacity: 0.5; margin-bottom: 16px; }
-
-    /* Form */
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 500; color: #cbd5e1; margin-bottom: 8px; }
-    .req { color: #f87171; }
-    input[type="text"], textarea { width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-family: inherit; font-size: 14px; transition: border-color 0.2s; resize: vertical; box-sizing: border-box; }
-    input:focus, textarea:focus { outline: none; border-color: #22A3FF; }
-    
-    .submit-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; background: #22A3FF; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .submit-btn:hover:not(:disabled) { background: #1b8bd9; }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .loading-state { text-align: center; padding: 60px 20px; color: #94A3B8; }
-    .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(34,163,255,0.2); border-top-color: #22A3FF; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
-    .spinner-small { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .alert.warn { display: flex; gap: 12px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); padding: 16px; border-radius: 12px; color: #f59e0b; }
-    .alert.warn p { margin: 0; font-size: 13px; line-height: 1.5; }
-    
-    @media (max-width: 1024px) {
-      .content-grid { grid-template-columns: 1fr; }
-    }
-  `]
+  styles: [`:host{display:block}.patient-detail-page{padding:16px}`]
 })
 export class PatientDetailComponent implements OnInit {
   patientId!: string;

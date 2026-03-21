@@ -7,6 +7,7 @@ import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
 import { routes } from './app.routes';
 import { initializeAuth } from './auth/auth.initializer';
 import { authInterceptor } from './auth/auth.interceptor';
+import { SessionService } from './core/services/session.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAuth,
-      deps: [OAuthService, Router],
+      deps: [OAuthService, Router, SessionService],
       multi: true
     }
   ]

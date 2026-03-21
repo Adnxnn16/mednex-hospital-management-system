@@ -30,7 +30,7 @@
                     <select formControlName="doctorId" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-primary outline-none appearance-none">
                         <option value="" disabled selected>Assign doctor...</option>
                         <option *ngFor="let d of doctors" [value]="d.id">
-                            {{ d.fullName }} — {{ d.specialty || 'General' }}
+                            {{ d.firstName }} {{ d.lastName }} — {{ d.specialisation || 'General' }}
                         </option>
                     </select>
                 </div>

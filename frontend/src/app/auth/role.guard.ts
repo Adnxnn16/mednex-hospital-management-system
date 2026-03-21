@@ -14,7 +14,20 @@ export class RoleGuard implements CanActivate {
     const required = (route.data['roles'] as string[] | undefined) ?? [];
     if (required.length === 0) return true;
 
-    const roles = new Set(this.auth.roles());
+    const token = this.auth.getToken();
+    let userRoles: string[] = [];
+    if (token && token.split('.').length >= 2) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        userRoles = payload?.realm_access?.roles ?? [];
+      } catch {
+        userRoles = this.auth.roles();
+      }
+    } else {
+      userRoles = this.auth.roles();
+    }
+
+    const roles = new Set(userRoles);
     const ok = required.some((r) => roles.has(r));
     return ok ? true : this.router.createUrlTree(['/login']);
   }

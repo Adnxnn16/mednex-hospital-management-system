@@ -1,9 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../auth.service';
+import { keycloakIssuer } from '../auth.config';
+
+export type LoginRole = 'admin' | 'doctor' | 'nurse';
+
+const ROLE_CONFIG: Record<LoginRole, { label: string; icon: string; subtitle: string }> = {
+  admin:  { label: 'Admin',        icon: 'admin_panel_settings', subtitle: 'Hospital Administrator' },
+  doctor: { label: 'Doctor',       icon: 'stethoscope',          subtitle: 'Physician / Specialist' },
+  nurse:  { label: 'Nurse',        icon: 'medical_services',     subtitle: 'Clinical Staff' }
+};
 
 @Component({
   selector: 'app-login',
@@ -17,71 +26,114 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  step: 1 | 2 = 1;
   loginForm: FormGroup;
-  hidePassword = true;
+  hidePin = true;
   isLoading = false;
   errorMessage = '';
 
-  roles = [
-    { label: 'Admin',  hint: 'admin'  as const, icon: 'admin_panel_settings', desc: 'Hospital Administrator' },
-    { label: 'Doctor', hint: 'doctor' as const, icon: 'stethoscope',          desc: 'Physician / Specialist' },
-    { label: 'Nurse',  hint: 'nurse'  as const, icon: 'medical_services',     desc: 'Clinical Staff' },
-  ];
-  selectedRoleIndex = 1; // Default to Doctor
+  /** Current role from route or query; default to doctor */
+  role: LoginRole = 'doctor';
+
+  readonly roleConfig = ROLE_CONFIG;
+  readonly roles: LoginRole[] = ['admin', 'doctor', 'nurse'];
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     public auth: AuthService
   ) {
     this.loginForm = this.fb.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
       rememberMe: [false]
     });
   }
 
   ngOnInit(): void {
-    // If already authenticated, redirect straight to the role dashboard
     if (this.auth.isLoggedIn()) {
       this.auth.navigateToRoleDashboard();
+      return;
     }
+
+    this.route.data.subscribe(d => {
+      const fromData = d['role'] as LoginRole | undefined;
+      if (fromData && this.roles.includes(fromData)) {
+        this.role = fromData;
+        this.errorMessage = '';
+        this.step = 2; // Auto-skip to step 2 if route has specific role
+        return;
+      }
+    });
+
+    this.route.queryParams.subscribe(q => {
+      const fromQuery = q['role'] as string | undefined;
+      if (fromQuery && this.roles.includes(fromQuery as LoginRole)) {
+        this.role = fromQuery as LoginRole;
+        this.errorMessage = '';
+        this.step = 2;
+      }
+    });
   }
 
-  onRoleChange(index: number): void {
-    this.selectedRoleIndex = index;
+  get roleLabel(): string {
+    return this.role.charAt(0).toUpperCase() + this.role.slice(1);
+  }
+
+  get portalTitle(): string {
+    return `${this.roleLabel} Portal Access`;
+  }
+
+  get buttonText(): string {
+    return `Access ${this.roleLabel} Portal`;
+  }
+
+  get config() {
+    return ROLE_CONFIG[this.role];
+  }
+
+  selectRole(r: LoginRole): void {
+    this.role = r;
     this.errorMessage = '';
   }
 
-  get selectedRole() {
-    return this.roles[this.selectedRoleIndex];
+  continueToStep2(): void {
+    this.step = 2;
+    this.errorMessage = '';
   }
 
-  /**
-   * Initiate Keycloak OIDC login flow.
-   * The login_hint passed here tells Keycloak which role tab to pre-select.
-   * After the OAuth callback, auth.initializer.ts handles the redirect.
-   */
-  onLogin(): void {
+  goToRoleSelector(): void {
+    this.step = 1;
+    this.errorMessage = '';
+  }
+
+  async onLogin(): Promise<void> {
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Please enter both your employee ID/email and security PIN.';
+      return;
+    }
+
     this.isLoading = true;
+    this.errorMessage = '';
+    
+    const { username, password } = this.loginForm.value;
+    
     try {
-      this.auth.login(this.selectedRole.hint);
+      const success = await this.auth.loginWithPassword(username, password);
+      if (success) {
+        this.auth.navigateToRoleDashboard();
+      } else {
+         this.errorMessage = 'Invalid credentials. Please try again.';
+      }
     } catch {
       this.errorMessage = 'Failed to connect to the authentication server. Please try again.';
-      this.isLoading = false;
     }
+
+    this.isLoading = false;
   }
 
-  /**
-   * DEV ONLY: bypass Keycloak and navigate directly by role for local UI testing.
-   * This skips AuthGuard, so only works if guards allow it.
-   */
-  onDevBypass(): void {
-    const hint = this.selectedRole.hint;
-    let role: 'ROLE_ADMIN' | 'ROLE_DOCTOR' | 'ROLE_NURSE' = 'ROLE_DOCTOR';
-    
-    if (hint === 'admin') role = 'ROLE_ADMIN';
-    else if (hint === 'nurse') role = 'ROLE_NURSE';
-
-    this.auth.setMockRole(role);
-    this.auth.navigateToRoleDashboard();
+  openKeycloakAdmin(): void {
+    window.open(`${keycloakIssuer.replace('/realms/mednex', '')}/admin`, '_blank');
   }
 }

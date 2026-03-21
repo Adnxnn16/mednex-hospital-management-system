@@ -45,8 +45,13 @@ public class SchemaPerTenantConnectionProvider extends AbstractDataSourceBasedMu
 		if (schema == null || !schema.matches("[a-z0-9_]+")) {
 			throw new SQLException("Invalid schema name");
 		}
+		String dbName = connection.getMetaData().getDatabaseProductName();
+		String sql = "SET search_path TO \"" + schema + "\", public";
+		if (dbName != null && dbName.equalsIgnoreCase("H2")) {
+			sql = "SET SCHEMA \"" + schema + "\"";
+		}
 		try (Statement st = connection.createStatement()) {
-			st.execute("SET search_path TO \"" + schema + "\", public");
+			st.execute(sql);
 		}
 	}
 }

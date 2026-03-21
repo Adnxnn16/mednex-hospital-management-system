@@ -38,7 +38,7 @@ export class DoctorsComponent implements OnInit {
   submitting = false;
   showForm = false;
   doctors: DoctorDto[] = [];
-  displayedColumns = ['fullName', 'email', 'specialty', 'createdAt'];
+  displayedColumns = ['name', 'email', 'specialisation', 'createdAt'];
   form: FormGroup;
 
   constructor(
@@ -47,9 +47,11 @@ export class DoctorsComponent implements OnInit {
     private readonly snack: MatSnackBar
   ) {
     this.form = this.fb.group({
-      fullName: ['', [Validators.required]],
-      email: ['', [Validators.email]],
-      specialty: ['']
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      specialisation: ['', [Validators.required]],
+      licenceNumber: ['', [Validators.required]],
+      email: ['', [Validators.email]]
     });
   }
 
@@ -76,7 +78,14 @@ export class DoctorsComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.submitting = true;
-    this.api.createDoctor(this.form.value).subscribe({
+    const v = this.form.value;
+    this.api.createDoctor({
+      firstName: v.firstName,
+      lastName: v.lastName,
+      specialisation: v.specialisation,
+      licenceNumber: v.licenceNumber,
+      email: v.email || null
+    }).subscribe({
       next: () => {
         this.submitting = false;
         this.showForm = false;

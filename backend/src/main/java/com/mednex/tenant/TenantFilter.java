@@ -35,8 +35,13 @@ public class TenantFilter extends OncePerRequestFilter {
 			if (headerTenant != null && !headerTenant.isBlank() && jwtTenant != null && !jwtTenant.isBlank()
 					&& !headerTenant.equals(jwtTenant)) {
 				
-				auditService.log("SECURITY_VIOLATION", "TENANT_FILTER", "N/A", extractUserId(), 
-					"{\"headerTenant\":\"" + headerTenant + "\", \"jwtTenant\":\"" + jwtTenant + "\", \"ip\":\"" + request.getRemoteAddr() + "\"}");
+				auditService.logSecurityViolation(
+					"SECURITY_VIOLATION",
+					"CrossTenantAttempt",
+					null,
+					headerTenant,
+					request.getRemoteAddr()
+				);
 
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				response.setContentType("application/json");

@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +18,13 @@ import com.mednex.domain.Patient;
 import com.mednex.repo.AdmissionRepository;
 import com.mednex.repo.BedRepository;
 import com.mednex.repo.PatientRepository;
+import com.mednex.tenant.TenantContext;
 import com.mednex.web.dto.AdmissionDto;
 import com.mednex.web.request.CreateAdmissionRequest;
 
 @Service
 public class AdmissionService {
+	private static final Logger log = LoggerFactory.getLogger(AdmissionService.class);
 	private final PatientRepository patientRepo;
 	private final BedRepository bedRepo;
 	private final AdmissionRepository admissionRepo;
@@ -35,6 +40,7 @@ public class AdmissionService {
 		this.validator = validator;
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_NURSE')")
 	public List<AdmissionDto> list() {
 		return admissionRepo.findAll().stream()
 				.map(a -> new AdmissionDto(
@@ -48,9 +54,16 @@ public class AdmissionService {
 				.collect(Collectors.toList());
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_NURSE')")
 	@Transactional
 	public AdmissionDto admit(CreateAdmissionRequest req, String createdBy) {
-		Bed bed = bedRepo.findById(req.bedId()).orElseThrow(() -> new NotFoundException("Bed not found"));
+		Bed bed = bedRepo.findById(req.bedId()).orElseThrow(() -> {
+			log.warn("SECURITY_PROBE tenantId={} bedId={}",
+				TenantContext.getTenantId(), req.bedId());
+			return new AccessDeniedException(
+				"Access denied: resource not available in current tenant context"
+			);
+		});
 		if ("OCCUPIED".equalsIgnoreCase(bed.getStatus())) {
 			throw new ConflictException("Bed is already occupied");
 		}
@@ -103,16 +116,27 @@ public class AdmissionService {
 		Admission savedAdmission = admissionRepo.save(admission);
 		admission = savedAdmission;
 
-		auditService.log("ADMIT_PATIENT", "Admission", admission.getId().toString(), createdBy);
+		// Link bed to admission
+		bed.setCurrentAdmissionId(admission.getId());
+		bedRepo.save(bed);
+
+		auditService.log("ADMIT", "Patient", p.getId().toString(), p.getId(), createdBy, "{}");
 
 		return new AdmissionDto(admission.getId(), p.getId(), bed.getId(), admission.getAdmittedAt(), admission.getDischargedAt(),
 				admission.getNotes(), admission.getVitals());
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_NURSE')")
 	@Transactional
 	public AdmissionDto discharge(UUID id, String dischargedBy) {
 		Admission admission = admissionRepo.findById(id)
-				.orElseThrow(() -> new NotFoundException("Admission not found"));
+				.orElseThrow(() -> {
+					log.warn("SECURITY_PROBE tenantId={} admissionId={}",
+						TenantContext.getTenantId(), id);
+					return new AccessDeniedException(
+						"Access denied: resource not available in current tenant context"
+					);
+				});
 		
 		if (admission.getDischargedAt() != null) {
 			throw new ConflictException("Patient is already discharged");
@@ -124,19 +148,27 @@ public class AdmissionService {
 
 		Bed bed = admission.getBed();
 		bed.setStatus("AVAILABLE");
+		bed.setCurrentAdmissionId(null);
 		Bed savedBed2 = bedRepo.save(bed);
 		bed = savedBed2;
 
-		auditService.log("DISCHARGE_PATIENT", "Admission", admission.getId().toString(), dischargedBy);
+		auditService.log("DISCHARGE", "Admission", admission.getId().toString(), admission.getPatient().getId(), dischargedBy, "{}");
 
 		return new AdmissionDto(admission.getId(), admission.getPatient().getId(), bed.getId(),
 				admission.getAdmittedAt(), admission.getDischargedAt(), admission.getNotes(), admission.getVitals());
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_NURSE')")
 	@Transactional
 	public AdmissionDto addVitals(UUID id, com.mednex.web.request.AddVitalsRequest req, String addedBy) {
 		Admission admission = admissionRepo.findById(id)
-				.orElseThrow(() -> new NotFoundException("Admission not found"));
+				.orElseThrow(() -> {
+					log.warn("SECURITY_PROBE tenantId={} admissionId={}",
+						TenantContext.getTenantId(), id);
+					return new AccessDeniedException(
+						"Access denied: resource not available in current tenant context"
+					);
+				});
 		
 		try {
 			com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();

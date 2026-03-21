@@ -33,6 +33,9 @@ public class Bed {
 	@Column(nullable = false)
 	private String status = "AVAILABLE";
 
+	@Column(name = "current_admission_id")
+	private UUID currentAdmissionId;
+
 	@Column(name = "created_at", nullable = false)
 	private Instant createdAt = Instant.now();
 
@@ -74,6 +77,14 @@ public class Bed {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public UUID getCurrentAdmissionId() {
+		return currentAdmissionId;
+	}
+
+	public void setCurrentAdmissionId(UUID currentAdmissionId) {
+		this.currentAdmissionId = currentAdmissionId;
 	}
 
 	public Instant getCreatedAt() {

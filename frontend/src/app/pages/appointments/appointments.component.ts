@@ -60,7 +60,7 @@ export class AppointmentsComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     height: 'auto',
     selectable: true,

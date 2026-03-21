@@ -38,6 +38,7 @@ public class MdcContextFilter extends OncePerRequestFilter {
 
             MDC.put("traceId", UUID.randomUUID().toString());
             MDC.put("requestUri", request.getRequestURI());
+            MDC.put("httpMethod", request.getMethod());
 
             chain.doFilter(request, response);
         } finally {

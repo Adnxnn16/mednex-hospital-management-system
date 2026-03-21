@@ -21,11 +21,22 @@ public class Doctor {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@Column(name = "full_name", nullable = false)
-	private String fullName;
+	@Column(name = "first_name", nullable = false)
+	private String firstName;
+
+	@Column(name = "last_name", nullable = false)
+	private String lastName;
 
 	private String email;
-	private String specialty;
+
+	@Column(name = "specialisation", nullable = false)
+	private String specialisation;
+
+	@Column(name = "licence_number", nullable = false)
+	private String licenceNumber;
+
+	@Column(name = "tenant_id", nullable = false)
+	private String tenantId;
 
 	@Column(name = "created_at", nullable = false)
 	private Instant createdAt = Instant.now();
@@ -38,12 +49,20 @@ public class Doctor {
 		this.id = id;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -54,12 +73,28 @@ public class Doctor {
 		this.email = email;
 	}
 
-	public String getSpecialty() {
-		return specialty;
+	public String getSpecialisation() {
+		return specialisation;
 	}
 
-	public void setSpecialty(String specialty) {
-		this.specialty = specialty;
+	public void setSpecialisation(String specialisation) {
+		this.specialisation = specialisation;
+	}
+
+	public String getLicenceNumber() {
+		return licenceNumber;
+	}
+
+	public void setLicenceNumber(String licenceNumber) {
+		this.licenceNumber = licenceNumber;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public Instant getCreatedAt() {
@@ -68,5 +103,10 @@ public class Doctor {
 
 	public void setCreatedAt(Instant createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	/** Convenience getter for full name (PRD does not require it; used for display). */
+	public String getFullName() {
+		return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
 	}
 }

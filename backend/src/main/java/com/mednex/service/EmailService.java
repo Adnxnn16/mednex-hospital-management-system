@@ -16,6 +16,7 @@ public class EmailService {
 		this.mailSender = mailSender;
 	}
 
+	@org.springframework.scheduling.annotation.Async
 	public void sendAppointmentConfirmation(String to, String subject, String body) {
 		if (mailSender == null) {
 			log.info("No mail sender configured – email to {} skipped: {}", to, subject);

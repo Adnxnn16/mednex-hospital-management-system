@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration, ChartType, ChartOptions } from 'chart.js';
+import type { ChartConfiguration, ChartType, ChartOptions } from 'chart.js';
 
 // Calendar Imports
 import { FullCalendarModule } from '@fullcalendar/angular';

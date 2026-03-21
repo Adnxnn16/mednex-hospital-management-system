@@ -16,8 +16,8 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "audit_log")
 public class AuditLogEntry {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 
 	@Column(name = "tenant_id", nullable = false)
 	private String tenantId;
@@ -39,17 +39,20 @@ public class AuditLogEntry {
 	private UUID patientId;
 
 	@Column(name = "occurred_at", nullable = false)
-	private Instant occurredAt = Instant.now();
+	private Instant timestamp = Instant.now();
+
+	@Column(name = "ip_address")
+	private String ipAddress;
 
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(nullable = false, columnDefinition = "jsonb")
 	private String metadata = "{}";
 
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -101,12 +104,24 @@ public class AuditLogEntry {
 		this.patientId = patientId;
 	}
 
-	public Instant getOccurredAt() {
-		return occurredAt;
+	public Instant getTimestamp() {
+		return timestamp;
 	}
 
-	public void setOccurredAt(Instant occurredAt) {
-		this.occurredAt = occurredAt;
+	public void setTimestamp(Instant timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	// Backward compatibility for existing DTO/controller mappings.
+	public Instant getOccurredAt() { return timestamp; }
+	public void setOccurredAt(Instant occurredAt) { this.timestamp = occurredAt; }
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 	public String getMetadata() {

@@ -1,5 +1,5 @@
 <div class="login-wrapper">
-  <!-- Left Side: Interactive Branding -->
+  <!-- Left Side: Branding (hidden on small screens) -->
   <div class="branding-side">
     <div class="branding-content">
       <div class="logo-section animate-up">
@@ -11,11 +11,9 @@
           <p>QUANTUM HEALTH SYSTEMS</p>
         </div>
       </div>
-
       <div class="feature-showcase animate-up" style="animation-delay: 0.1s">
         <h2>Intelligent Hospital Management</h2>
         <p>Streamlining clinical operations with real-time synchronization and predictive analytics.</p>
-        
         <div class="stat-pills">
           <div class="pill"><span class="material-symbols-outlined">security</span> HIPAA Secure</div>
           <div class="pill"><span class="material-symbols-outlined">bolt</span> Real-time Sync</div>
@@ -23,64 +21,127 @@
         </div>
       </div>
     </div>
-    
-    <!-- Abstract Background Elements -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
     <div class="grid-overlay"></div>
   </div>
 
-  <!-- Right Side: Login Form -->
+  <!-- Right Side: Form -->
   <div class="form-side">
-    <div class="login-card animate-up" style="animation-delay: 0.2s">
-      <div class="card-header">
-        <h2>Welcome Back</h2>
-        <p>Please select your professional role to access the portal</p>
-      </div>
+    <div class="login-card animate-up" [class.role-specific]="role">
 
-      <div class="role-grid">
-        <div 
-          *ngFor="let role of roles; let i = index"
-          class="role-card"
-          [class.active]="selectedRoleIndex === i"
-          (click)="onRoleChange(i)"
-        >
+      <!-- Step 1: Role selector view -->
+      @if (step === 1) {
+        <div class="card-header">
+          <h2>Welcome Back</h2>
+          <p>Please select your professional role to access the portal</p>
+        </div>
+        <div class="role-grid">
+          @for (r of roles; track r) {
+            <button type="button" class="role-card clickable" [class.active]="role === r" (click)="selectRole(r)">
+              <div class="role-icon-box">
+                <span class="material-symbols-outlined">{{ roleConfig[r].icon }}</span>
+              </div>
+              <div class="role-info">
+                <span class="role-title">{{ roleConfig[r].label }}</span>
+                <span class="role-subtitle">{{ roleConfig[r].subtitle }}</span>
+              </div>
+              @if (role === r) {
+                <div class="check-mark">
+                  <span class="material-symbols-outlined">check_circle</span>
+                </div>
+              }
+            </button>
+          }
+        </div>
+        
+        <button type="button" class="login-btn primary-gradient" (click)="continueToStep2()">
+          <span class="material-symbols-outlined">login</span>
+          <span>Connect to Portal</span>
+        </button>
+      }
+
+      <!-- Step 2: Form entry view -->
+      @if (step === 2 && config) {
+        <div class="role-portal-header">
+          <div class="logo-mini">
+            <span class="material-symbols-outlined">medical_services</span>
+          </div>
+          <div class="brand-mini">
+            <h1>MedNex</h1>
+          </div>
+        </div>
+        <div class="card-header">
+          <h2>{{ portalTitle }}</h2>
+          <p>Please enter your clinical credentials</p>
+        </div>
+
+        <!-- Role indicator card (fixed for this role) -->
+        <div class="role-indicator-card">
           <div class="role-icon-box">
-            <span class="material-symbols-outlined">{{ role.icon }}</span>
+            <span class="material-symbols-outlined">{{ config.icon }}</span>
           </div>
           <div class="role-info">
-            <span class="role-title">{{ role.label }}</span>
-            <span class="role-subtitle">{{ role.desc }}</span>
+            <span class="role-title">{{ config.label }}</span>
+            <span class="role-subtitle">{{ config.subtitle }}</span>
           </div>
-          <div class="check-mark" *ngIf="selectedRoleIndex === i">
+          <div class="check-mark">
             <span class="material-symbols-outlined">check_circle</span>
           </div>
         </div>
-      </div>
 
-      <div class="error-msg" *ngIf="errorMessage">
-        <span class="material-symbols-outlined">error</span>
-        {{ errorMessage }}
-      </div>
+        <!-- Form fields -->
+        <form [formGroup]="loginForm" class="portal-form">
+          <div class="field-group">
+            <label>EMPLOYEE ID / EMAIL</label>
+            <div class="input-wrap">
+              <span class="material-symbols-outlined">person</span>
+              <input type="text" formControlName="username" placeholder="username" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>SECURITY PIN</label>
+            <div class="input-wrap">
+              <span class="material-symbols-outlined">lock</span>
+              <input [type]="hidePin ? 'password' : 'text'" formControlName="password" (keyup.enter)="onLogin()" placeholder="••••••••" />
+            </div>
+          </div>
 
-      <button 
-        class="login-btn" 
-        (click)="onLogin()" 
-        [disabled]="isLoading"
-        [class.loading]="isLoading"
-      >
-        <span class="material-symbols-outlined" *ngIf="!isLoading">login</span>
-        <span *ngIf="!isLoading">Connect to Portal</span>
-        <div class="loader" *ngIf="isLoading"></div>
-      </button>
+          <div class="form-options">
+            <label class="stay-logged-in">
+              <input type="checkbox" formControlName="rememberMe" />
+              <span class="check-custom"></span>
+              <span>Stay logged in</span>
+            </label>
+            <a href="#" class="forgot-link" (click)="$event.preventDefault()">Forgot ID?</a>
+          </div>
+
+          @if (errorMessage) {
+            <div class="error-msg">
+              <span class="material-symbols-outlined">error</span>
+              {{ errorMessage }}
+            </div>
+          }
+
+          <button type="button" class="login-btn primary-gradient" (click)="onLogin()" [disabled]="isLoading" [class.loading]="isLoading">
+            <span class="material-symbols-outlined" *ngIf="!isLoading">login</span>
+            <span *ngIf="!isLoading">{{ buttonText }}</span>
+            <div class="loader" *ngIf="isLoading"></div>
+          </button>
+        </form>
+
+        <a href="#" class="back-link" (click)="goToRoleSelector(); $event.preventDefault()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Change role
+        </a>
+      }
 
       <div class="divider">
-        <span>Development Access</span>
+        <span>Development</span>
       </div>
-
-      <button class="bypass-link" (click)="onDevBypass()">
-        <span class="material-symbols-outlined">developer_mode</span>
-        Bypass Keycloak for local testing
+      <button type="button" class="bypass-link" (click)="openKeycloakAdmin()">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        Open Keycloak Admin Console
       </button>
 
       <div class="card-footer">

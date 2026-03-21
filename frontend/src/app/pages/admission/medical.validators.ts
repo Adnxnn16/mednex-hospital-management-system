@@ -13,8 +13,8 @@ export function validAge(min: number, max: number): ValidatorFn {
 export const indianPhoneNumber: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value = control.value;
   if (!value) return null;
-  const regex = /^[6-9]\d{9}$/;
-  return regex.test(value) ? null : { indianPhoneNumber: true };
+  const regex = /^[+]?[\d\s\-()]{7,15}$/;
+  return regex.test(value) ? null : { phone: true };
 };
 
 export const pinCode: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
