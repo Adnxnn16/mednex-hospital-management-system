@@ -8,31 +8,36 @@ MedNex is an enterprise-grade, multi-tenant Hospital Management System (HMS) bui
 
 A comprehensive visual guide to the MedNex Enterprise ecosystem.
 
-### 1. Primary Access & Portals
-| **Image 1: Login Page** | **Image 8: Sign Out** |
-| :---: | :---: |
-| ![Login Page](screenshots/image1_login_page.png) | ![Sign Out](screenshots/image8_signout.png) |
+### 1. Unified Access & Authentication
+
+The entry point for all clinical staff. Secure, role-aware, and multi-tenant.
+
+|          **Main Login Portal**          |          **Admin Access Portals**          |           **Doctor Access Portal**           |           **Nurse Access Portal**           |
+| :-------------------------------------: | :----------------------------------------: | :------------------------------------------: | :-----------------------------------------: |
+| ![Welcome Back](screenshots/logins/login_page.png) | ![Admin Sign-In](screenshots/logins/admin_signin.png) | ![Doctor Sign-In](screenshots/logins/doctor_signin.png) | ![Nurse Sign-In](screenshots/logins/nurse_signin.png) |
+
+> [!NOTE]
+> Integrated role-based authentication ensures that each user lands in their specific context immediately after sign-in.
 
 ---
 
-### 2. Role-Based Access (Sign-In)
-| **Image 2: Admin Sign-In** | **Image 4: Doctor Sign-In** | **Image 6: Nurse Sign-In** |
-| :---: | :---: | :---: |
-| ![Admin Sign-In](screenshots/image2_admin_signin.png) | ![Doctor Sign-In](screenshots/image4_doctor_signin.png) | ![Nurse Sign-In](screenshots/image6_nurse_signin.png) |
+### 2. Operational Dashboards
+
+Domain-specific consoles providing real-time clinical logistics and analytics.
+
+|                    **Admin Dashboard**                     |                     **Doctor Dashboard**                     |                    **Nurse Dashboard**                     |
+| :--------------------------------------------------------: | :----------------------------------------------------------: | :--------------------------------------------------------: |
+| ![Admin Dashboard](screenshots/dashboards/admin_dashboard.png) | ![Doctor Dashboard](screenshots/dashboards/doctor_dashboard.png) | ![Nurse Dashboard](screenshots/dashboards/nurse_dashboard.png) |
 
 ---
 
-### 3. Operational Dashboards
-| **Image 3: Admin Dashboard** | **Image 5: Doctor Dashboard** | **Image 7: Nurse Dashboard** |
-| :---: | :---: | :---: |
-| ![Admin Dashboard](screenshots/image3_admin_dashboard.png) | ![Doctor Dashboard](screenshots/image5_doctor_dashboard.png) | ![Nurse Dashboard](screenshots/image7_nurse_dashboard.png) |
+### 3. Enterprise Security (Keycloak)
 
----
+MedNex uses Keycloak for robust identity and access management (IAM).
 
-### 4. Enterprise Security (Keycloak)
-| **Image 9: Keyclock Sign-In** | **Image 10: Keyclock Dashboard** |
-| :---: | :---: |
-| ![Keycloak Sign-In](screenshots/image9_keycloak_signin.png) | ![Keycloak Dashboard](screenshots/image10_keycloak_dashboard.png) |
+|                     **Security Gate**                      |                    **Enterprise Console**                     |
+| :--------------------------------------------------------: | :-----------------------------------------------------------: |
+| ![Keycloak Shield](screenshots/keycloak/keycloak_signin.png) | ![Keycloak Admin](screenshots/keycloak/keycloak_dashboard.png) |
 
 ---
 
@@ -155,6 +160,7 @@ BUILD SUCCESS
 ```
 
 ### Step-by-Step Execution
+
 1.  **Start Infrastructure:** `docker-compose up -d postgres keycloak` (Start Docker Engine first!)
 2.  **Start Backend:** `cd backend` then `./mvnw spring-boot:run`
 3.  **Start Frontend:** `cd frontend` then `npm install` and `npm start`
@@ -162,19 +168,24 @@ BUILD SUCCESS
 ---
 
 ## 🔐 Role-Specific Credentials
+
 Use these credentials at the unified login portal to access role-specific dashboards:
 
-| Role | Username | Password | Dashboard Features |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin1` | `admin123` | Hospital analytics, inventory, and bed occupancy. |
+| Role       | Username  | Password    | Dashboard Features                                     |
+| :--------- | :-------- | :---------- | :----------------------------------------------------- |
+| **Admin**  | `admin1`  | `admin123`  | Hospital analytics, inventory, and bed occupancy.      |
 | **Doctor** | `doctor1` | `doctor123` | Patient records, clinical schedule, and consultations. |
-| **Nurse** | `nurse1` | `nurse123` | Ward logs, medication tracking, and vitals. |
+| **Nurse**  | `nurse1`  | `nurse123`  | Ward logs, medication tracking, and vitals.            |
 
 ### Keycloak System Access
+
 - **Admin Console**: [http://localhost:8080/admin](http://localhost:8080/admin)
 - **Login**: `admin` / `admin`
 
 ---
 
 _Created for the MedNex Enterprise Final Review Session._
+
+```
+
 ```
