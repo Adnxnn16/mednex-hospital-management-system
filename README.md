@@ -37,7 +37,7 @@ MedNex uses Keycloak for robust identity and access management (IAM).
 
 |                     **Security Gate**                      |                    **Enterprise Console**                     |
 | :--------------------------------------------------------: | :-----------------------------------------------------------: |
-| ![Keycloak Shield](screenshots/keycloak/keycloak_signin.png) | ![Keycloak Admin](screenshots/keycloak/keycloak_dashboard.png) |
+| ![Keycloak Shield](screenshots/Keycloak/keycloak_signin.png) | ![Keycloak Admin](screenshots/Keycloak/keycloak_dashboard.png) |
 
 ---
 
